@@ -1,6 +1,8 @@
 package com.example.locavel.domain;
 
 import com.example.locavel.domain.common.BaseEntity;
+import com.example.locavel.domain.enums.Grade;
+import com.example.locavel.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +42,10 @@ public class User extends BaseEntity {
     private String introduce;
 
     private String phone_num;
+
+    private Grade grade;
+
+    private Role role;
 
     private LocalDateTime created_at;
 
