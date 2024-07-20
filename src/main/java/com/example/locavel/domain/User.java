@@ -47,7 +47,7 @@ public class User extends BaseEntity {
 
     private Role role;
 
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime certified_at;//인증한 날짜
+    private LocalDateTime certifiedAt;//인증한 날짜
 }
