@@ -35,5 +35,5 @@ public class Reviews extends BaseEntity {
 
     private Float rating;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 }

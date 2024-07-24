@@ -36,6 +36,6 @@ public class Places extends BaseEntity {
 
     private String activity;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 
 }

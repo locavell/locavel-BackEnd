@@ -28,5 +28,5 @@ public class Events extends BaseEntity {
 
     private LocalDateTime end_time;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 }
