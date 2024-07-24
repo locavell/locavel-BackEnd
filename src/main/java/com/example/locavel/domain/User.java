@@ -1,14 +1,17 @@
 package com.example.locavel.domain;
 
 import com.example.locavel.domain.common.BaseEntity;
+import com.example.locavel.domain.enums.Access;
 import com.example.locavel.domain.enums.Grade;
 import com.example.locavel.domain.enums.Role;
+import com.example.locavel.domain.enums.SocialType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +25,7 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "user_id")
     private Long id;
 
     private String refreshToken;//추가한 칼럼
@@ -43,11 +46,29 @@ public class User extends BaseEntity {
 
     private String phone_num;
 
+    @Enumerated(EnumType.STRING)
     private Grade grade;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    @Enumerated(EnumType.STRING)
+    private Access access;
 
     private LocalDateTime created_at;
 
     private LocalDateTime certified_at;//인증한 날짜
+
+    //유저 권한 GUEST -> USER 로
+    public void authorizeUser(){
+        this.access = Access.USER;
+    }
+
+    //비밀번호 암호화
+    public void passwordEncode(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(this.password);
+    }
 }
