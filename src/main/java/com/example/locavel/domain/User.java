@@ -71,4 +71,8 @@ public class User extends BaseEntity {
     public void passwordEncode(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(this.password);
     }
+
+    public void updateRefreshToken(String updateRefreshToken){
+        this.refreshToken = updateRefreshToken;
+    }
 }
