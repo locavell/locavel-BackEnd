@@ -12,6 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByNickname(String nickname);
 
+    //OAuth2 로그인 구현 시 사용
     Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
 
     Optional<User> findByRefreshToken(String refreshToken);
