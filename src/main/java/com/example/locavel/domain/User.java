@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "USERS")
 public class User extends BaseEntity {
 
     @Id
