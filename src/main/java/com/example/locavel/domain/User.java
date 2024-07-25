@@ -33,6 +33,8 @@ public class User extends BaseEntity {
 
     private String email;//추가한 칼럼
 
+    private String socialId;//추가한 칼럼
+
     private String password;//추가한 칼럼
 
     private String profileImage;//추가한 칼럼
