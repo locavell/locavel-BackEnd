@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -36,6 +38,7 @@ public class UserCommandServiceImpl implements UserCommandService{
                 .introduce(userSignUpDto.getIntroduce())
                 .phone_num(userSignUpDto.getPhone_num())
                 .access(Access.USER)
+                .created_at(LocalDateTime.now())
                 .build();
 
         user.passwordEncode(passwordEncoder);
