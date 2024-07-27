@@ -79,4 +79,10 @@ public class JwtService {
     /**
      * AccessToken + RefreshToken 헤더에 담아서 보내기
      * */
+    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken){
+        response.setStatus(HttpServletResponse.SC_OK);//200 상태 코드
+        setAccessTokenHeader(response, accessToken);
+        setRefreshTokenHeader(response, refreshToken);
+        log.info("AccessToken, RefreshToken 헤더 설정 성공");
+    }
 }
