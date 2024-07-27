@@ -3,6 +3,7 @@ package com.example.locavel.service.jwtService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.locavel.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -84,5 +86,19 @@ public class JwtService {
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
         log.info("AccessToken, RefreshToken 헤더 설정 성공");
+    }
+    /**
+     * AccessToken을 헤더에서 추출하고 Bearer 삭제하고 토큰값만 가져오기
+     * */
+    public Optional<String> extractAccessToken(HttpServletRequest request){
+        return Optional.ofNullable(request.getHeader(accessHeader))
+                .filter(refreshToken -> refreshToken.startsWith(BEARER))
+                .map(refreshToken -> refreshToken.replace(BEARER, ""));
+    }
+    //동일하게 RefreshToken 값만 가져오기
+    public Optional<String> extractRefreshToken(HttpServletRequest request){
+        return Optional.ofNullable(request.getHeader(refreshHeader))
+                .filter(refreshToken -> refreshToken.startsWith(BEARER))
+                .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 }
