@@ -87,6 +87,14 @@ public class JwtService {
         setRefreshTokenHeader(response, refreshToken);
         log.info("AccessToken, RefreshToken 헤더 설정 성공");
     }
+    //헤더 설정 메서드
+    public void setAccessTokenHeader(HttpServletResponse response, String accessToken){
+        response.setHeader(accessHeader, accessToken);
+    }
+    public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken){
+        response.setHeader(refreshHeader, refreshToken);
+    }
+
     /**
      * AccessToken을 헤더에서 추출하고 Bearer 삭제하고 토큰값만 가져오기
      * */
@@ -101,4 +109,5 @@ public class JwtService {
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
+
 }
