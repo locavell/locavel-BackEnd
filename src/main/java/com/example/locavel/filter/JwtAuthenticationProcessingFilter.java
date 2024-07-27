@@ -3,14 +3,19 @@ package com.example.locavel.filter;
 import com.example.locavel.domain.User;
 import com.example.locavel.repository.UserRepository;
 import com.example.locavel.service.jwtService.JwtService;
+import com.example.locavel.util.PasswordUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -94,6 +99,39 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         .ifPresent(email -> userRepository.findByEmail(email)
                                 .ifPresent(this::saveAuthentication)));
         filterChain.doFilter(request, response);
+    }
+
+
+    /**
+     * [인증 허가 메소드]
+     * 파라미터의 유저 : 우리가 만든 회원 객체 / 빌더의 유저 : UserDetails의 User 객체
+     *
+     * new UsernamePasswordAuthenticationToken()로 인증 객체인 Authentication 객체 생성
+     * UsernamePasswordAuthenticationToken의 파라미터
+     * 1. 위에서 만든 UserDetailsUser 객체 (유저 정보)
+     * 2. credential(보통 비밀번호로, 인증 시에는 보통 null로 제거)
+     * 3. Collection < ?extends GrantedAuthority>로,
+     * UserDetails의 User 객체 안에 Set<GrantedAuthority> authorities이 있어서 getter로 호출한 후에,
+     * new NullAuthoritiesMapper()로 GrantedAuthoritiesMapper 객체를 생성하고 mapAuthorities()에 담기
+     *
+     * SecurityContextHolder.getContext()로 SecurityContext를 꺼낸 후,
+     * setAuthentication()을 이용하여 위에서 만든 Authentication 객체에 대한 인증 허가 처리
+     */
+    public void saveAuthentication(User myUser) {
+        String password = myUser.getPassword();
+        if(password == null) {
+            password = PasswordUtil.generateRandomPassword();
+        }
+
+        UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
+                .username(myUser.getEmail())
+                .password(password)
+                .roles(myUser.getAccess().name())
+                .build();
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetailsUser, null, authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 
