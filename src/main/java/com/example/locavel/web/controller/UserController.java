@@ -1,6 +1,6 @@
-package com.example.locavel.web;
+package com.example.locavel.web.controller;
 
-import com.example.locavel.service.UserCommandService;
+import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

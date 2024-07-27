@@ -1,4 +1,4 @@
-package com.example.locavel.service;
+package com.example.locavel.service.userService;
 
 import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
 
