@@ -79,5 +79,22 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         return reIssuedRefreshToken;
     }
 
+    /**
+     * 액세스 토큰 체크 & 인증 처리 메소드
+     * request에서 extractAccessToken()으로 액세스 토큰 추출 후, isTokenValid()로 유효한 토큰인지 검증
+     * 유효한 토큰이면, 액세스 토큰에서 extractEmail로 Email을 추출한 후 findByEmail()로 해당 이메일을 사용하는 유저 객체 반환
+     * 그 유저 객체를 saveAuthentication()으로 인증 처리하여
+     * 인증 허가 처리된 객체를 SecurityContextHolder에 담기
+     * 그 후 다음 인증 필터로 진행
+     */
+    public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        jwtService.extractAccessToken(request)
+                .filter(jwtService::isTokenValid)
+                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
+                        .ifPresent(email -> userRepository.findByEmail(email)
+                                .ifPresent(this::saveAuthentication)));
+        filterChain.doFilter(request, response);
+    }
+
 
 }
