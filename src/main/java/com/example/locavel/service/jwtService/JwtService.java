@@ -110,4 +110,36 @@ public class JwtService {
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
+    /**
+     * AccessToken에서 Email 추출
+     * 추출 전에 JWT.require()로 검증기 생성
+     * verify로 AceessToken 검증 후
+     * 유효하다면 getClaim()으로 이메일 추출
+     * 유효하지 않다면 빈 Optional 객체 반환
+     */
+    public Optional<String> extractEmail(String accessToken){
+        try{
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(accessToken)//accessToken 유효한지 검증
+                    .getClaim(EMAIL_CLAIM)//claim에 담긴 email 가져오기
+                    .asString());
+
+        }catch (Exception e){
+            log.error("엑세스 토큰이 유효하지 않습니다.");
+            return Optional.empty();
+        }
+    }
+
+     /**
+     * RefresshToken DB에 저장
+     * */
+
+     public void updateRefreshToken(String email, String refreshToken){
+         userRepository.findByEmail(email)
+                 .ifPresentOrElse(
+                         user -> user.updateRefreshToken(refreshToken),
+                         () -> new Exception("일치하는 회원이 없습니다.")
+                 );
+     }
 }
