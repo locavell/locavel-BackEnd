@@ -1,11 +1,15 @@
 package com.example.locavel.service.jwtService;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.locavel.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -35,4 +39,31 @@ public class JwtService {
     private static final String EMAIL_CLAIM = "email";
     private static final String BEARER = "Bearer ";
 
+    /**
+     * AccessToken 생성 메소드
+     * JWT의 Subject -> AccessToken
+     * JWT의 Claim -> email, 만약 식별자 필요하다면 withClaim(클래임 이름, 클래임 값) 넣어서 추가 가능
+     */
+    public String createAccessToken(String email){
+        Date now = new Date();
+        return JWT.create()
+                .withSubject(ACCESS_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))//액세스 토큰 만료 시간 설정
+                .withClaim(EMAIL_CLAIM, email)
+                .sign(Algorithm.HMAC512(secretKey));
+    }
+
+    /**
+     * RefreshToken 생성 메소드
+     * JWT의 Subject -> RefreshToken
+     * JWT의 Claim -> email 넣지 않으므로 필요 없음
+     */
+
+    public String createRefreshToken(){
+        Date now = new Date();
+        return JWT.create()
+                .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))//리프레시 토큰 만료 시간 설정
+                .sign(Algorithm.HMAC512(secretKey));
+    }
 }
