@@ -17,10 +17,10 @@ public class ReviewRestController {
     private final ReviewService reviewService;
 
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록합니다.")
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping(value = "/{placeId}", consumes = "multipart/form-data")
     public ApiResponse<ReviewResponseDTO.ReviewResultDTO> createReview(
             @Valid @RequestBody ReviewRequestDTO.RevieweDTO request,
-            @RequestParam Long placeId) {
+            @PathVariable(name="placeId") Long placeId) {
         ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(placeId, request);
         return ApiResponse.onSuccess(response);
     }
