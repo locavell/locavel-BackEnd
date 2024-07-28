@@ -26,8 +26,9 @@ public class Reviews extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Places place;
-
-    private String img;
+    @ElementCollection
+    @CollectionTable(name = "review_img", joinColumns = @JoinColumn(name = "reviews_id"))
+    private List<String> reviewImg;
 
     private String comment;
 
