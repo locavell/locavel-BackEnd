@@ -30,11 +30,9 @@ public class Places extends BaseEntity {
 
     private String description;
 
-    private String spot;
-
-    private String food;
-
-    private String activity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private LocalDateTime created_at;
 
