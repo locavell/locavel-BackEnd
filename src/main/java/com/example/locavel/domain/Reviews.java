@@ -3,9 +3,10 @@ package com.example.locavel.domain;
 import com.example.locavel.domain.common.BaseEntity;
 import com.example.locavel.domain.enums.Traveler;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,14 +27,17 @@ public class Reviews extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Places place;
-
-    private String img;
+    @ElementCollection
+    @CollectionTable(name = "review_img", joinColumns = @JoinColumn(name = "reviews_id"))
+    private List<String> reviewImg;
 
     private String comment;
 
-    private Traveler traveler;//Role로 수정 가능성
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Traveler traveler;
 
+    @NotNull
     private Float rating;
 
-    private LocalDateTime created_at;
 }
