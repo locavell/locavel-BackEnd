@@ -4,9 +4,10 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.example.locavel.apiPayload.code.status.ErrorStatus;
+import com.example.locavel.apiPayload.exception.handler.S3Handler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,7 @@ public class S3Uploader {
 
         for (MultipartFile multipartFile : multipartFiles) {
             if (isDuplicate(multipartFile)) {
-//                throw new Exception400("file", ErrorMessage.DUPLICATE_IMAGE);
+                throw new S3Handler(ErrorStatus.DUPLICATE_IMAGE);
             }
 
             String uploadedUrl = saveFile(multipartFile);
@@ -49,23 +50,23 @@ public class S3Uploader {
         String fileBucket = urlParts[2].split("\\.")[0];
 
         if (!fileBucket.equals(bucket)) {
-//            throw new Exception400("fileUrl", ErrorMessage.NO_IMAGE_EXIST);
+            throw new S3Handler(ErrorStatus.NO_IMAGE_EXIST);
         }
 
         String objectKey = String.join("/", Arrays.copyOfRange(urlParts, 3, urlParts.length));
 
         if (!amazonS3.doesObjectExist(bucket, objectKey)) {
-//            throw new Exception400("fileUrl", ErrorMessage.NO_IMAGE_EXIST);
+            throw new S3Handler(ErrorStatus.NO_IMAGE_EXIST);
         }
 
         try {
             amazonS3.deleteObject(bucket, objectKey);
         } catch (AmazonS3Exception e) {
             log.error("File delete fail : " + e.getMessage());
-//            throw new Exception500(ErrorMessage.FAIL_DELETE);
+            throw new S3Handler(ErrorStatus.FAIL_DELETE);
         } catch (SdkClientException e) {
             log.error("AWS SDK client error : " + e.getMessage());
-//            throw new Exception500(ErrorMessage.FAIL_DELETE);
+            throw new S3Handler(ErrorStatus.FAIL_DELETE);
         }
 
         log.info("File delete complete: " + objectKey);
@@ -85,13 +86,13 @@ public class S3Uploader {
             amazonS3.putObject(bucket, randomFilename, file.getInputStream(), metadata);
         } catch (AmazonS3Exception e) {
             log.error("Amazon S3 error while uploading file: " + e.getMessage());
- //           throw new Exception500(ErrorMessage.FAIL_UPLOAD);
+            throw new S3Handler(ErrorStatus.FAIL_UPLOAD);
         } catch (SdkClientException e) {
             log.error("AWS SDK client error while uploading file: " + e.getMessage());
- //           throw new Exception500(ErrorMessage.FAIL_UPLOAD);
+            throw new S3Handler(ErrorStatus.FAIL_UPLOAD);
         } catch (IOException e) {
             log.error("IO error while uploading file: " + e.getMessage());
-  //          throw new Exception500(ErrorMessage.FAIL_UPLOAD);
+            throw new S3Handler(ErrorStatus.FAIL_UPLOAD);
         }
 
         log.info("File upload completed: " + randomFilename);
@@ -133,7 +134,7 @@ public class S3Uploader {
         List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg");
 
         if (!allowedExtensions.contains(fileExtension)) {
-  //          throw new Exception400("file", ErrorMessage.NOT_IMAGE_EXTENSION);
+            throw new S3Handler(ErrorStatus.NOT_IMAGE_EXTENSION);
         }
         return fileExtension;
     }
