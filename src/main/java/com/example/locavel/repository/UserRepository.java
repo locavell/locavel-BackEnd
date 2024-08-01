@@ -1,7 +1,6 @@
 package com.example.locavel.repository;
 
 import com.example.locavel.domain.User;
-<<<<<<< HEAD
 import com.example.locavel.domain.enums.SocialType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
