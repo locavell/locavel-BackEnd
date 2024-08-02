@@ -17,8 +17,9 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain;charset=UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("로그인 실패. 이메일과 비밀번호를 확인해주세요");
+        log.info("Request Content-Type: {}", request.getContentType());
         log.info("로그인 실패. 메세지 : {}", exception.getMessage());
     }
 }
