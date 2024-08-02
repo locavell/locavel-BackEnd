@@ -39,6 +39,7 @@ public class S3Uploader {
             }
 
             String uploadedUrl = saveFile(multipartFile);
+            uploadedUrls.add(uploadedUrl);
         }
         clear();
         return uploadedUrls;
