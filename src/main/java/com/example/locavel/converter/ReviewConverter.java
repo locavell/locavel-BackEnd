@@ -32,4 +32,10 @@ public class ReviewConverter {
                 .imgUrl(url)
                 .build();
     }
+    public static ReviewResponseDTO.ReviewUpdateResultDTO toReviewUpdateResultDTO(Reviews review) {
+        return ReviewResponseDTO.ReviewUpdateResultDTO.builder()
+                .reviewId(review.getId())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
 }
