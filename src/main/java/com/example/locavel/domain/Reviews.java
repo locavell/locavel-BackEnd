@@ -3,9 +3,9 @@ package com.example.locavel.domain;
 import com.example.locavel.domain.common.BaseEntity;
 import com.example.locavel.domain.enums.Traveler;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,17 +27,15 @@ public class Reviews extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Places place;
-    @ElementCollection
-    @CollectionTable(name = "review_img", joinColumns = @JoinColumn(name = "reviews_id"))
-    private List<String> reviewImg;
 
     private String comment;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private Traveler traveler;
 
-    @NotNull
+    @Column(nullable = false)
     private Float rating;
+    @OneToMany(mappedBy = "reviews", cascade = CascadeType.ALL)
+    private List<ReviewImg> reviewImgList = new ArrayList<>();
 
 }

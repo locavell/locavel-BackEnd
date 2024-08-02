@@ -1,6 +1,7 @@
 package com.example.locavel.converter;
 
 import com.example.locavel.domain.Places;
+import com.example.locavel.domain.ReviewImg;
 import com.example.locavel.domain.Reviews;
 import com.example.locavel.domain.User;
 import com.example.locavel.domain.enums.Traveler;
@@ -19,12 +20,16 @@ public class ReviewConverter {
     public static Reviews toReviews(User user, Traveler traveler, Places place, ReviewRequestDTO.RevieweDTO request) {
         return Reviews.builder()
                 .comment(request.getComment())
-                //TODO : S3 추가 시 url로 변경
-//                .reviewImg(null)
                 .user(user)
                 .traveler(traveler)
                 .place(place)
                 .rating(request.getRating())
+                .build();
+    }
+    public static ReviewImg toReviewImg(Reviews reviews, String url) {
+        return ReviewImg.builder()
+                .reviews(reviews)
+                .imgUrl(url)
                 .build();
     }
 }
