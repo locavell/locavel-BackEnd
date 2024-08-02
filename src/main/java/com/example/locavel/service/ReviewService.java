@@ -52,6 +52,18 @@ public class ReviewService {
         Reviews updatedReview = reviewRepository.save(review);
         return ReviewConverter.toReviewUpdateResultDTO(updatedReview);
     }
+
+    public ReviewResponseDTO.ReviewResultDTO deleteReview(Long reviewId) {
+        Reviews review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new ReviewsHandler(ErrorStatus.REVIEW_NOT_FOUND));
+        ReviewResponseDTO.ReviewResultDTO resultDTO = ReviewConverter.toReviewResultDTO(review);
+        List<ReviewImg> reviewImgList = reviewImgRepository.findAllByReviews(review);
+        for(ReviewImg imgUrl : reviewImgList) {
+            s3Uploader.deleteFile(imgUrl.getImgUrl());
+        }
+        reviewRepository.delete(review);
+        return resultDTO;
+    }
     public void uploadReviewImg(List<MultipartFile> reviewImg, Reviews reviews, boolean update) {
         if (update) {
             List<ReviewImg> reviewImgList = reviewImgRepository.findAllByReviews(reviews);
