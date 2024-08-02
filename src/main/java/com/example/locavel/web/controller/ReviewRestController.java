@@ -29,7 +29,23 @@ public class ReviewRestController {
         if(request.getRating() == null) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_EXIST);
         }
+        if(request.getRating() > 5 || request.getRating() <0) {
+            throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
+        }
         ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(placeId, request, reviewImgUrls);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "리뷰 수정", description = "리뷰를 수정합니다.")
+    @PatchMapping(value = "/{reviewId}", consumes = "multipart/form-data")
+    public ApiResponse<ReviewResponseDTO.ReviewUpdateResultDTO> updateReview(
+            @Valid @RequestPart ReviewRequestDTO.RevieweDTO request,
+            @PathVariable(name="reviewId") Long reviewId,
+            @RequestPart(required = false) List<MultipartFile> reviewImgUrls) {
+        if(request.getRating() > 5 || request.getRating() <0) {
+            throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
+        }
+        ReviewResponseDTO.ReviewUpdateResultDTO response = reviewService.updateReview(reviewId, request, reviewImgUrls);
         return ApiResponse.onSuccess(response);
     }
 }
