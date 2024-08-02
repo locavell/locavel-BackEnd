@@ -11,7 +11,10 @@ import org.springframework.http.HttpStatus;
 public enum SuccessStatus implements BaseCode {
 
     //일반적인 응답
-    _OK(HttpStatus.OK, "COMMON200", "성공입니다.");
+    _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
+    REVIEW_CREATE_OK(HttpStatus.OK,"REVIEW2001", "리뷰가 정상적으로 등록되었습니다."),
+    REVIEW_UPDATE_OK(HttpStatus.OK,"REVIEW2002", "리뷰가 정상적으로 수정되었습니다."),
+    REVIEW_DELETE_OK(HttpStatus.OK,"REVIEW2003", "리뷰가 정상적으로 삭제되었습니다."),;
 
     private final HttpStatus httpStatus;
     private final String code;
