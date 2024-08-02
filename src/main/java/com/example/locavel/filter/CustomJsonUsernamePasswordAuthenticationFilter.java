@@ -32,7 +32,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException{
-        if(request.getContentType() == null || request.getContentType().equals(CONTENT_TYPE)){
+        if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)){
             throw new AuthenticationServiceException("Authentication Content-Type 이 제공되지 않습니다: "+ request.getContentType());
         }
         String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
