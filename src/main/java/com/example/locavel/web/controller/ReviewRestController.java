@@ -2,6 +2,7 @@ package com.example.locavel.web.controller;
 
 import com.example.locavel.apiPayload.ApiResponse;
 import com.example.locavel.apiPayload.code.status.ErrorStatus;
+import com.example.locavel.apiPayload.code.status.SuccessStatus;
 import com.example.locavel.apiPayload.exception.handler.ReviewsHandler;
 import com.example.locavel.service.ReviewService;
 import com.example.locavel.web.dto.ReviewDTO.ReviewRequestDTO;
@@ -33,7 +34,7 @@ public class ReviewRestController {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
         }
         ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(placeId, request, reviewImgUrls);
-        return ApiResponse.onSuccess(response);
+        return ApiResponse.of(SuccessStatus.REVIEW_CREATE_OK,response);
     }
 
     @Operation(summary = "리뷰 수정", description = "리뷰를 수정합니다.")
@@ -46,6 +47,13 @@ public class ReviewRestController {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
         }
         ReviewResponseDTO.ReviewUpdateResultDTO response = reviewService.updateReview(reviewId, request, reviewImgUrls);
-        return ApiResponse.onSuccess(response);
+        return ApiResponse.of(SuccessStatus.REVIEW_UPDATE_OK,response);
+    }
+
+    @Operation(summary = "리뷰 삭제", description = "리뷰를 삭제합니다.")
+    @DeleteMapping(value = "/{reviewId}")
+    public ApiResponse<ReviewResponseDTO.ReviewResultDTO> deleteReview(@PathVariable(name="reviewId")Long reviewId) {
+        ReviewResponseDTO.ReviewResultDTO response = reviewService.deleteReview(reviewId);
+        return ApiResponse.of(SuccessStatus.REVIEW_DELETE_OK,response);
     }
 }
