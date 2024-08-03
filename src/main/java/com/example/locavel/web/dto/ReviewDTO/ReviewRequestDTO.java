@@ -10,8 +10,6 @@ public class ReviewRequestDTO {
     public static class RevieweDTO {
         //TODO :  JWT 토큰 추가 후 userId 삭제
         Long userId;
-        //TODO : S3 추가 후 수정
-//        List<MultipartFile> reviewImgList;
         String comment;
         @NotNull
         Float rating;
