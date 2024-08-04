@@ -1,6 +1,7 @@
 package com.example.locavel.domain;
 
 import com.example.locavel.domain.common.BaseEntity;
+import com.example.locavel.domain.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,14 +27,24 @@ public class Places extends BaseEntity {
     @JoinColumn(name = "region_id")
     private Region region;
 
+    private String longitude; //경도
+
+    private String latitude; //위도
+
+    private String address;
+
     private String name;
 
     private String description;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "category_id")
+//    private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
-    private LocalDateTime created_at;
+    private Float rating;
 
+    private String telephoneNumber;
 }
