@@ -12,6 +12,7 @@ import com.example.locavel.service.loginService.LoginService;
 import com.example.locavel.service.userService.CustomOAuth2UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -74,6 +76,9 @@ public class SecurityConfig {
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
                         .requestMatchers("/api/sign-up", "/api/login", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 로그인 접근 가능
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
+                .logout(logout -> logout
+                        .logoutUrl("/api/logout")
+                        .logoutSuccessHandler(logoutSuccessHandler()))
                 .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .oauth2Login((oauth2) -> oauth2 // OAuth2 로그인 설정시작
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
@@ -91,6 +96,15 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return (request, response, authentication) -> {
+            // 로그아웃 성공 시 클라이언트에 어떤 응답을 줄 것인지 설정
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write("Logout successful");
+            response.flushBuffer();
+        };
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
