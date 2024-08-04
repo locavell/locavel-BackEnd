@@ -96,6 +96,8 @@ public class SecurityConfig {
         return http.build();
     }
 
+    //프론트에서 클라이언트에서 로그아웃 버튼을 클릭하면,
+    // 로그아웃 요청을 /api/logout으로 보내고, 성공하면 JWT 토큰을 삭제하는 로직을 추가해야 함
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return (request, response, authentication) -> {
