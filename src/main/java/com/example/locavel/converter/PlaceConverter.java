@@ -1,5 +1,6 @@
 package com.example.locavel.converter;
 
+import com.example.locavel.domain.PlaceImg;
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.enums.Category;
 import com.example.locavel.domain.enums.Region;
@@ -64,6 +65,13 @@ public class PlaceConverter {
                 .region(region)
                 .latitude(String.valueOf(latitude))
                 .longitude(String.valueOf(longitude))
+                .build();
+    }
+
+    public static PlaceImg toPlaceImg(Places places, String url){
+        return PlaceImg.builder()
+                .places(places)
+                .imgUrl(url)
                 .build();
     }
 }

@@ -1,8 +1,13 @@
 package com.example.locavel.service;
 
 import com.example.locavel.converter.PlaceConverter;
+import com.example.locavel.converter.ReviewConverter;
+import com.example.locavel.domain.PlaceImg;
 import com.example.locavel.domain.Places;
+import com.example.locavel.domain.ReviewImg;
+import com.example.locavel.domain.Reviews;
 import com.example.locavel.domain.enums.Region;
+import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
@@ -10,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import org.slf4j.Logger;
@@ -17,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,12 +31,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PlaceService {
     private final PlaceRepository placeRepository;
-
+    private final PlaceImgRepository placeImgRepository;
+    private final S3Uploader s3Uploader;
     private final WebClient webClient;
 
     @Autowired
-    public PlaceService(PlaceRepository placeRepository, WebClient.Builder webClientBuilder) {
+    public PlaceService(PlaceRepository placeRepository, PlaceImgRepository placeImgRepository, S3Uploader s3Uploader, WebClient.Builder webClientBuilder) {
         this.placeRepository = placeRepository;
+        this.placeImgRepository = placeImgRepository;
+        this.s3Uploader = s3Uploader;
         this.webClient = webClientBuilder.build();
     }
 
@@ -38,17 +48,11 @@ public class PlaceService {
         return placeRepository.findById(id);
     }
 
-//    public Places createPlace(PlaceRequestDTO.PlaceDTO request) {
-//        Places place = PlaceConverter.toPlace(request);
-//        return placeRepository.save(place);
-//    }
-private static final Logger logger = LoggerFactory.getLogger(PlaceService.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlaceService.class);
 
-    public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO) {
+    public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
 
-        // 네이버 API를 사용하여 위도와 경도 값을 가져오기
-        MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block(); // Mono를 block하여 값을 얻기
-//        logger.info("Sending request with body: {}", requestBody);
+        MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
         if (response == null) {
             throw new RuntimeException("Failed to get coordinates from address");
         }
@@ -59,6 +63,10 @@ private static final Logger logger = LoggerFactory.getLogger(PlaceService.class)
         Region region = Region.fromAddress(roadAddress);
 
         Places place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
+
+        if(placeImgUrls != null && !placeImgUrls.isEmpty()) {
+            uploadPlaceImg(placeImgUrls, place, false);
+        }
         return placeRepository.save(place);
     }
 
@@ -87,6 +95,20 @@ private static final Logger logger = LoggerFactory.getLogger(PlaceService.class)
                     return response;
 //                    throw new RuntimeException("Failed to get coordinates from address");
                 });
+    }
+
+    public void uploadPlaceImg(List<MultipartFile> placeImg, Places places, boolean update) {
+        if (update) {
+            List<PlaceImg> placeImgList = placeImgRepository.findAllByPlaces(places);
+            for(PlaceImg imgUrl : placeImgList) {
+                placeImgRepository.delete(imgUrl);
+                s3Uploader.deleteFile(imgUrl.getImgUrl());
+            }
+        }
+        List<String> imgUrls = s3Uploader.saveFiles(placeImg);
+        for(String imgUrl : imgUrls) {
+            placeImgRepository.save(PlaceConverter.toPlaceImg(places, imgUrl));
+        }
     }
 
 //    public Page<Places> getPlaceList(Region region, Integer page) {
