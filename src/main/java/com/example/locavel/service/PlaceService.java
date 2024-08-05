@@ -1,5 +1,7 @@
 package com.example.locavel.service;
 
+import com.example.locavel.apiPayload.code.status.ErrorStatus;
+import com.example.locavel.apiPayload.exception.handler.PlacesHandler;
 import com.example.locavel.converter.PlaceConverter;
 import com.example.locavel.converter.ReviewConverter;
 import com.example.locavel.domain.PlaceImg;
@@ -59,6 +61,10 @@ public class PlaceService {
         double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
         double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
         String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
+
+        if(placeRepository.findByAddress(roadAddress) != null){
+            throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
+        }
 
         Region region = Region.fromAddress(roadAddress);
 
