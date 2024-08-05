@@ -33,6 +33,7 @@ public class Places extends BaseEntity {
 
     private String address;
 
+    @Column(nullable = false)
     private String name;
 
     private String description;
@@ -44,6 +45,7 @@ public class Places extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(nullable = false)
     private Float rating;
 
     private String telephoneNumber;

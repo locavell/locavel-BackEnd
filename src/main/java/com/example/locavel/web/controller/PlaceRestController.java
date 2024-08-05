@@ -1,12 +1,15 @@
 package com.example.locavel.web.controller;
 
 import com.example.locavel.apiPayload.ApiResponse;
+import com.example.locavel.apiPayload.code.status.ErrorStatus;
+import com.example.locavel.apiPayload.exception.handler.ReviewsHandler;
 import com.example.locavel.converter.PlaceConverter;
 import com.example.locavel.domain.Places;
 import com.example.locavel.service.PlaceService;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -30,7 +33,10 @@ public class PlaceRestController {
     }
 
     @PostMapping("/api/places")
-    public ApiResponse<PlaceResponseDTO.PlaceResultDTO> createPlace(@RequestBody PlaceRequestDTO.PlaceDTO placeDTO) {
+    public ApiResponse<PlaceResponseDTO.PlaceResultDTO> createPlace(@Valid @RequestBody PlaceRequestDTO.PlaceDTO placeDTO) {
+        if(placeDTO.getRating() > 5 || placeDTO.getRating() <0) {
+            throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
+        }
         Places place = placeService.createPlace(placeDTO);
         return ApiResponse.onSuccess(PlaceConverter.toPlaceResultDTO(place));
     }
