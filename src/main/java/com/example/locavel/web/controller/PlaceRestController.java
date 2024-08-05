@@ -10,20 +10,18 @@ import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 public class PlaceRestController {
 
     private final PlaceService placeService;
-
-    public PlaceRestController(PlaceService placeService) {
-        this.placeService = placeService;
-    }
-
 
     @GetMapping("/api/places/{placeId}")
     @Operation(summary = "특정 장소 상세 조회 API", description = "특정 장소를 상세 조회하는 API입니다. query String으로 place 번호를 주세요")
@@ -32,12 +30,13 @@ public class PlaceRestController {
         return ApiResponse.onSuccess(PlaceConverter.toPlaceDetailDTO(place.orElse(null)));
     }
 
-    @PostMapping("/api/places")
-    public ApiResponse<PlaceResponseDTO.PlaceResultDTO> createPlace(@Valid @RequestBody PlaceRequestDTO.PlaceDTO placeDTO) {
+    @PostMapping(value = "/api/places", consumes = "multipart/form-data")
+    public ApiResponse<PlaceResponseDTO.PlaceResultDTO> createPlace(@Valid @RequestPart PlaceRequestDTO.PlaceDTO placeDTO,
+                                                                    @RequestPart(required = false) List<MultipartFile> placeImgUrls) {
         if(placeDTO.getRating() > 5 || placeDTO.getRating() <0) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
         }
-        Places place = placeService.createPlace(placeDTO);
+        Places place = placeService.createPlace(placeDTO, placeImgUrls);
         return ApiResponse.onSuccess(PlaceConverter.toPlaceResultDTO(place));
     }
 

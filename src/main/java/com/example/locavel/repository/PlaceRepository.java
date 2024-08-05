@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Places, Long> {
-    Page<Places> findAllByUser(User user, PageRequest of);
+    Places findByAddress(String address);
 }

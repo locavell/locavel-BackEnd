@@ -31,6 +31,7 @@ public enum ErrorStatus implements BaseErrorCode {
     //장소
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PLACE4001", "장소가 없습니다."),
     PLACE_NOT_EXIST(HttpStatus.BAD_REQUEST, "PLACE4002", "장소명은 필수입니다."),
+    PLACE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PLACE4003", "이미 등록된 장소입니다."),
 
 
     ;
