@@ -38,7 +38,7 @@ public class PlaceConverter {
                 .build();
     }
 
-    public static Places toPlace(PlaceRequestDTO.PlaceDTO request){
+    public static Places toPlace(PlaceRequestDTO.PlaceDTO request, Double latitude, Double longitude){
 
         Category category = null;
 
@@ -60,8 +60,8 @@ public class PlaceConverter {
                 .rating(request.getRating())
                 .telephoneNumber(request.getTelephoneNumber())
                 .address(request.getAddress())
-//                .latitude(String.valueOf(latitude))
-//                .longitude(String.valueOf(longitude))
+                .latitude(String.valueOf(latitude))
+                .longitude(String.valueOf(longitude))
                 .build();
     }
 }
