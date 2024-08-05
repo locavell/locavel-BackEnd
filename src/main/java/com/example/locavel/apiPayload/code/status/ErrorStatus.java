@@ -29,7 +29,11 @@ public enum ErrorStatus implements BaseErrorCode {
     RATING_NOT_VALID(HttpStatus.BAD_REQUEST,"REVIEW4003", "총점은 0~5점이어야 합니다."),
 
     //장소
-    PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PLACE4001", "장소가 없습니다."),;
+    PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PLACE4001", "장소가 없습니다."),
+    PLACE_NOT_EXIST(HttpStatus.BAD_REQUEST, "PLACE4002", "장소명은 필수입니다."),
+
+
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;
