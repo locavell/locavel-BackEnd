@@ -2,6 +2,7 @@ package com.example.locavel.converter;
 
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.enums.Category;
+import com.example.locavel.domain.enums.Region;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 
@@ -23,7 +24,7 @@ public class PlaceConverter {
         return PlaceResponseDTO.PlaceDetailDTO.builder()
                 .name(places.getName())
                 .placeId(places.getId())
-                .address(places.getRegion().getAddress())
+                .address(places.getRegion().getAddress())   // 수정 필요
                 .generalRating(places.getRating())
                 .longitude(places.getLongitude())
                 .latitude(places.getLatitude())
@@ -38,7 +39,7 @@ public class PlaceConverter {
                 .build();
     }
 
-    public static Places toPlace(PlaceRequestDTO.PlaceDTO request, Double latitude, Double longitude){
+    public static Places toPlace(PlaceRequestDTO.PlaceDTO request, Double latitude, Double longitude, String roadAddress, Region region){
 
         Category category = null;
 
@@ -59,7 +60,8 @@ public class PlaceConverter {
                 .category(category)
                 .rating(request.getRating())
                 .telephoneNumber(request.getTelephoneNumber())
-                .address(request.getAddress())
+                .address(roadAddress)
+                .region(region)
                 .latitude(String.valueOf(latitude))
                 .longitude(String.valueOf(longitude))
                 .build();
