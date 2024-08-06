@@ -1,9 +1,14 @@
 package com.example.locavel.service.userService;
 
+import com.example.locavel.apiPayload.code.status.ErrorStatus;
 import com.example.locavel.domain.User;
 import com.example.locavel.domain.enums.Access;
+import com.example.locavel.apiPayload.exception.handler.UserHandler;
 import com.example.locavel.repository.UserRepository;
+import com.example.locavel.service.jwtService.JwtService;
+import com.example.locavel.web.dto.UserDTO.UserRequestDto;
 import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +23,7 @@ public class UserCommandServiceImpl implements UserCommandService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;//PasswordEncoder 구현체 Spring Bean 등록으로 해결
+    private final JwtService jwtService;
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception{
 
@@ -43,5 +49,17 @@ public class UserCommandServiceImpl implements UserCommandService{
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User updateUserProfile(HttpServletRequest httpServletRequest, UserRequestDto.UpdateUserProfileDto updateUserProfileDto){
+        String email = httpServletRequest.getUserPrincipal().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+        if(updateUserProfileDto.getProfileImage() != null) user.setProfileImage(updateUserProfileDto.getProfileImage());
+
+        return user;
     }
 }
