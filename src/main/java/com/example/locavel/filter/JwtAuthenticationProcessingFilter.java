@@ -26,7 +26,7 @@ import java.io.IOException;
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     //해당 URL 이외의 요청을 보내면 해당 토큰들의 유효성 검사하여 인증 처리할 것
-    private static final String NO_CHECK_URL ="/api/login";
+    private static final String NO_CHECK_URL ="/api/auth/login";
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
