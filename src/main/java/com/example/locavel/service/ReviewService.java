@@ -15,6 +15,9 @@ import com.example.locavel.repository.UserRepository;
 import com.example.locavel.web.dto.ReviewDTO.ReviewRequestDTO;
 import com.example.locavel.web.dto.ReviewDTO.ReviewResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,5 +79,47 @@ public class ReviewService {
         for(String imgUrl : imgUrls) {
             reviewImgRepository.save(ReviewConverter.toReviewImg(reviews, imgUrl));
         }
+    }
+
+    public Page<Reviews> getReviewList(Long placeId, Integer page, String sortOption, Traveler traveler) {
+
+        //필터 : 현지인/여행객
+        Specification<Reviews> spec = Specification.where(null);
+        spec = spec.and((root, query, cb) -> cb.equal(root.get("place").get("id"),placeId));
+        if(traveler != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("traveler"), traveler));
+        }
+
+        //정렬 (기본 : 최신순)
+        spec = spec.and((root, query, cb) -> {
+            if (sortOption == null || sortOption.equals("최신순")) {
+                query.orderBy(cb.desc(root.get("created_at")));
+            } else if(sortOption.equals("오래된순")){
+                query.orderBy(cb.asc(root.get("created_at")));
+            }
+            return cb.conjunction();
+        });
+
+        return reviewRepository.findAll(spec, PageRequest.of(page, 10));
+    }
+
+    public Page<Reviews> getMyReviewList(Long userId, Integer page) {
+        //TODO: JWT 토큰 추가 후 변경
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new RuntimeException("유저가 없습니다"));
+        return reviewRepository.findAllByUser(user,PageRequest.of(page,10));
+    }
+
+    public ReviewResponseDTO.placeReviewSummaryDTO getPlaceReviewSummary(Long placeId) {
+        Places place = placeRepository.findById(placeId)
+                .orElseThrow(()->new ReviewsHandler(ErrorStatus.PLACE_NOT_FOUND));
+        Float totalRating = reviewRepository.getAvgRatingByPlace(placeId);
+        Long totalCount = reviewRepository.countAllByPlace(place);
+        Float travelerRating = reviewRepository.getAvgRatingByPlaceAndTraveler(placeId, Traveler.YES);
+        Long travelerCount = reviewRepository.countAllByPlaceAndTraveler(place,Traveler.YES);
+        Float generalRating = reviewRepository.getAvgRatingByPlaceAndTraveler(placeId, Traveler.NO);
+        Long generalCount = reviewRepository.countAllByPlaceAndTraveler(place, Traveler.NO);
+
+        return ReviewConverter.toPlaceReviewSummaryDTO(totalRating, totalCount, generalRating, generalCount, travelerRating, travelerCount);
     }
 }
