@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ReviewRepository extends JpaRepository<Reviews, Long>, JpaSpecificationExecutor<Reviews> {
     Page<Reviews> findAllByUser(User user, PageRequest pageRequest);
     Long countAllByPlaceAndTraveler(Places place, Traveler traveler);
@@ -21,4 +23,6 @@ public interface ReviewRepository extends JpaRepository<Reviews, Long>, JpaSpeci
 
     @Query("select avg(r.rating) from Reviews r where r.place.id = :placeId and r.traveler = :traveler")
     Float getAvgRatingByPlaceAndTraveler(@Param("placeId")Long placeId, @Param("traveler")Traveler traveler);
+
+    List<Reviews> findAllByPlace(Places places);
 }
