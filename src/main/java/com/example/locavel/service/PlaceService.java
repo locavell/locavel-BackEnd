@@ -13,6 +13,7 @@ import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
+import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -50,10 +52,7 @@ public class PlaceService {
         return placeRepository.findById(id);
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(PlaceService.class);
-
     public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
-
         MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
         if (response == null) {
             throw new RuntimeException("Failed to get coordinates from address");
@@ -67,7 +66,6 @@ public class PlaceService {
         }
 
         Region region = Region.fromAddress(roadAddress);
-
         Places place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
 
         if(placeImgUrls != null && !placeImgUrls.isEmpty()) {
@@ -86,7 +84,6 @@ public class PlaceService {
                 .doOnNext(response -> {
                     // 응답 확인을 위한 로그 추가
                     System.out.println("Received response: " + response);
-//                    logger.info("Received response: {}", response); // 로깅을 위한 코드
                 })
                 .map(response -> {
                     if (response == null) {
@@ -99,7 +96,6 @@ public class PlaceService {
                         throw new RuntimeException("No addresses found in API response");
                     }
                     return response;
-//                    throw new RuntimeException("Failed to get coordinates from address");
                 });
     }
 
@@ -115,6 +111,11 @@ public class PlaceService {
         for(String imgUrl : imgUrls) {
             placeImgRepository.save(PlaceConverter.toPlaceImg(places, imgUrl));
         }
+    }
+
+    public List<Places> getNearbyMarkers(float swLat, float swLng, float neLat, float neLng) {
+        List<Places> places = placeRepository.findPlacesInRange(swLat, swLng, neLat, neLng);
+        return places;
     }
 
 //    public Page<Places> getPlaceList(Region region, Integer page) {

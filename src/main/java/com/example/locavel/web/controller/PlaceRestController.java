@@ -40,6 +40,19 @@ public class PlaceRestController {
         return ApiResponse.onSuccess(PlaceConverter.toPlaceResultDTO(place));
     }
 
+    @GetMapping("/api/places/map")
+    @Operation(summary = "내 주변 장소 조회(마커) API", description = "지도뷰에서 내 주변 장소를 조회하는 API입니다.")
+    public ApiResponse<List<PlaceResponseDTO.NearbyMarkerDTO>> getNearbyMarker(@RequestParam float swLat,    // 남서쪽 구석 위도
+                                                                         @RequestParam float swLng,    // 납서쪽 구석 경도
+                                                                         @RequestParam float neLat,    // 북동쪽 구석 위도
+                                                                         @RequestParam float neLng){   // 북동쪽 구석 경도
+
+        List<Places> places = placeService.getNearbyMarkers(swLat, swLng, neLat, neLng);
+        return ApiResponse.onSuccess(PlaceConverter.toNearbyMarkerDTO(places));
+//        placeService.getPlacesInBounds(swLat, swLng, neLat, neLng);
+//        return ApiResponse.onSuccess(PlaceConverter.toNearbyMarkerDTO());
+    }
+
 
 //    @GetMapping("/api/places/list")
 //    @Operation(summary = "지도에서 목록 버튼으로 가게 목록 조회 API", description = "현재 지도 화면의 가게 목록을 조회하는 API이며, 페이징을 포함합니다. query String 으로 page 번호를 주세요")

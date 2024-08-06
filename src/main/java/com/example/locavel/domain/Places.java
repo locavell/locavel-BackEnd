@@ -27,9 +27,9 @@ public class Places extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Region region;
 
-    private String longitude; //경도
+    private double longitude; //경도
 
-    private String latitude; //위도
+    private double latitude; //위도
 
     private String address;
 

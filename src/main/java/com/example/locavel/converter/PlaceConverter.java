@@ -9,17 +9,18 @@ import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlaceConverter {
 
-    public static PlaceResponseDTO.PlacePreViewDTO toPlacePreViewDTO(Places places) {
-        return PlaceResponseDTO.PlacePreViewDTO.builder()
-                .name(places.getName())
-                .build();
-    }
-    public static PlaceResponseDTO.PlacePreViewListDTO toPlacePreViewListDTO(List<Places> placesList){
-        return null;
-    }
+//    public static PlaceResponseDTO.PlacePreViewDTO toPlacePreViewDTO(Places places) {
+//        return PlaceResponseDTO.PlacePreViewDTO.builder()
+//                .name(places.getName())
+//                .build();
+//    }
+//    public static PlaceResponseDTO.PlacePreViewListDTO toPlacePreViewListDTO(List<Places> placesList){
+//        return null;
+//    }
 
     public static PlaceResponseDTO.PlaceDetailDTO toPlaceDetailDTO(Places places) {
         return PlaceResponseDTO.PlaceDetailDTO.builder()
@@ -40,10 +41,10 @@ public class PlaceConverter {
                 .build();
     }
 
-    public static Places toPlace(PlaceRequestDTO.PlaceDTO request, Double latitude, Double longitude, String roadAddress, Region region){
-
+    public static Places toPlace(PlaceRequestDTO.PlaceDTO request,
+                                 Double latitude, Double longitude,
+                                 String roadAddress, Region region){
         Category category = null;
-
         switch (request.getCategory()){
             case "spot":
                 category = Category.spot;
@@ -63,8 +64,8 @@ public class PlaceConverter {
                 .telephoneNumber(request.getTelephoneNumber())
                 .address(roadAddress)
                 .region(region)
-                .latitude(String.valueOf(latitude))
-                .longitude(String.valueOf(longitude))
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 
@@ -74,4 +75,17 @@ public class PlaceConverter {
                 .imgUrl(url)
                 .build();
     }
+
+    public static List<PlaceResponseDTO.NearbyMarkerDTO> toNearbyMarkerDTO(List<Places> places) {
+        return places.stream()
+                .map(place -> PlaceResponseDTO.NearbyMarkerDTO.builder()
+                        .placeId(place.getId())
+                        .latitude(place.getLatitude())
+                        .longitude(place.getLongitude())
+                        .category(place.getCategory().toString())
+                        .categoryImgUrl(place.getCategory().getIconUrl())
+                        .build())
+                .collect(Collectors.toList());
+    }
+//    public static PlaceResponseDTO.NearbyMarkerDTO toNearbyMarkerDTO(Places places) {}
 }
