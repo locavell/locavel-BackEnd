@@ -72,4 +72,24 @@ public class PlaceResponseDTO {
         String category;
         String categoryImgUrl;  // 카테고리 아이콘 이미지 url
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FilterMarkerDTO{
+        Long placeId;
+        Double latitude;    // 위도
+        Double longitude;  // 경도
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FilterMarkerListDTO{
+        List<FilterMarkerDTO> filterMarkerDTOList;
+        String category;
+        String categoryImgUrl;
+    }
 }

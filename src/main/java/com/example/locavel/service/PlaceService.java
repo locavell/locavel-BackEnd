@@ -8,6 +8,7 @@ import com.example.locavel.domain.PlaceImg;
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.ReviewImg;
 import com.example.locavel.domain.Reviews;
+import com.example.locavel.domain.enums.Category;
 import com.example.locavel.domain.enums.Region;
 import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
@@ -116,6 +117,12 @@ public class PlaceService {
     public List<Places> getNearbyMarkers(float swLat, float swLng, float neLat, float neLng) {
         List<Places> places = placeRepository.findPlacesInRange(swLat, swLng, neLat, neLng);
         return places;
+    }
+
+    public List<Places> getFilterMarkers(String category){
+        // Enum에서 카테고리 변환
+        Category cat = Category.valueOf(category.toLowerCase());
+        return placeRepository.findByCategory(cat);
     }
 
 //    public Page<Places> getPlaceList(Region region, Integer page) {

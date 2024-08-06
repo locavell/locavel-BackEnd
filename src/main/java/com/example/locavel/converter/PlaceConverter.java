@@ -87,5 +87,25 @@ public class PlaceConverter {
                         .build())
                 .collect(Collectors.toList());
     }
-//    public static PlaceResponseDTO.NearbyMarkerDTO toNearbyMarkerDTO(Places places) {}
+
+    public static PlaceResponseDTO.FilterMarkerDTO toFilterMarkerDTO(Places places) {
+        return PlaceResponseDTO.FilterMarkerDTO.builder()
+                .placeId(places.getId())
+                .latitude(places.getLatitude())
+                .longitude(places.getLongitude())
+                .build();
+    }
+
+    public static PlaceResponseDTO.FilterMarkerListDTO toFilterMarkerListDTO(List<Places> places) {
+        List<PlaceResponseDTO.FilterMarkerDTO> filterMarkerDTOList = places.stream()
+                .map(PlaceConverter::toFilterMarkerDTO)
+                .collect(Collectors.toList());
+
+
+        return PlaceResponseDTO.FilterMarkerListDTO.builder()
+                .filterMarkerDTOList(filterMarkerDTOList)
+                .category(places.get(0).getCategory().toString())
+                .categoryImgUrl(places.get(0).getCategory().getIconUrl())
+                .build();
+    }
 }

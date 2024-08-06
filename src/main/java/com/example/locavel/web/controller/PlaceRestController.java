@@ -31,6 +31,7 @@ public class PlaceRestController {
     }
 
     @PostMapping(value = "/api/places", consumes = "multipart/form-data")
+    @Operation(summary = "장소 등록 API", description = "새로운 장소를 등록하는 API입니다. 장소명, 별점은 필수로 입력해야 합니다.")
     public ApiResponse<PlaceResponseDTO.PlaceResultDTO> createPlace(@Valid @RequestPart PlaceRequestDTO.PlaceDTO placeDTO,
                                                                     @RequestPart(required = false) List<MultipartFile> placeImgUrls) {
         if(placeDTO.getRating() > 5 || placeDTO.getRating() <0) {
@@ -49,8 +50,14 @@ public class PlaceRestController {
 
         List<Places> places = placeService.getNearbyMarkers(swLat, swLng, neLat, neLng);
         return ApiResponse.onSuccess(PlaceConverter.toNearbyMarkerDTO(places));
-//        placeService.getPlacesInBounds(swLat, swLng, neLat, neLng);
-//        return ApiResponse.onSuccess(PlaceConverter.toNearbyMarkerDTO());
+    }
+
+    @GetMapping("/api/places/filters")
+    @Operation(summary = "스팟, 푸드, 액티비티 필터 조회(마커) API", description = "지도뷰에서 스팟, 푸드, 액티비티 필터로 장소 위치를 조회하는 API입니다.")
+    public ApiResponse<PlaceResponseDTO.FilterMarkerListDTO> getFilterMarker(@RequestParam String category){
+        List<Places> places = placeService.getFilterMarkers(category);
+        return ApiResponse.onSuccess(PlaceConverter.toFilterMarkerListDTO(places));
+
     }
 
 
