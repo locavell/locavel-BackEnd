@@ -2,10 +2,10 @@ package com.example.locavel.config;
 
 import com.example.locavel.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.example.locavel.filter.JwtAuthenticationProcessingFilter;
-import com.example.locavel.handler.LoginFailureHandler;
-import com.example.locavel.handler.LoginSuccessHandler;
-import com.example.locavel.handler.OAuth2LoginFailureHandler;
-import com.example.locavel.handler.OAuth2LoginSuccessHandler;
+import com.example.locavel.apiPayload.exception.handler.LoginFailureHandler;
+import com.example.locavel.apiPayload.exception.handler.LoginSuccessHandler;
+import com.example.locavel.apiPayload.exception.handler.OAuth2LoginFailureHandler;
+import com.example.locavel.apiPayload.exception.handler.OAuth2LoginSuccessHandler;
 import com.example.locavel.repository.UserRepository;
 import com.example.locavel.service.jwtService.JwtService;
 import com.example.locavel.service.loginService.LoginService;
@@ -27,7 +27,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -74,10 +73,10 @@ public class SecurityConfig {
                         // 아이콘, css, js 관련
                         // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
-                        .requestMatchers("/api/sign-up", "/api/login", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 로그인 접근 가능
+                        .requestMatchers("/api/auth/sign-up", "/api/auth/login", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 로그인 접근 가능
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .logout(logout -> logout
-                        .logoutUrl("/api/logout")
+                        .logoutUrl("/api/auth/logout")
                         .logoutSuccessHandler(logoutSuccessHandler()))
                 .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .oauth2Login((oauth2) -> oauth2 // OAuth2 로그인 설정시작
