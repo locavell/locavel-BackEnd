@@ -78,4 +78,8 @@ public class User extends BaseEntity {
     public void updateRefreshToken(String updateRefreshToken){
         this.refreshToken = updateRefreshToken;
     }
+
+    public void setProfileImage(String profileImage){
+        this.profileImage = profileImage;
+    }
 }
