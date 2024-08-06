@@ -31,7 +31,12 @@ public class PlaceRestController {
     @Operation(summary = "특정 장소 상세 조회 API", description = "특정 장소를 상세 조회하는 API입니다. query String으로 place 번호를 주세요")
     public ApiResponse<PlaceResponseDTO.PlaceDetailDTO> getPlace(@PathVariable Long placeId) {
         Optional<Places> place = placeService.findPlace(placeId);
-        return ApiResponse.onSuccess(PlaceConverter.toPlaceDetailDTO(place.orElse(null)));
+        List<String> reviewImgList = null;
+        if (place.isPresent()) {
+            reviewImgList = reviewService.getReviewImagesByPlace(place.get());
+        }
+
+        return ApiResponse.onSuccess(PlaceConverter.toPlaceDetailDTO(place.orElse(null), reviewImgList));
     }
 
     @PostMapping(value = "/api/places", consumes = "multipart/form-data")
@@ -77,14 +82,4 @@ public class PlaceRestController {
 
         return ApiResponse.onSuccess(PlaceConverter.toFilterPlaceListDTO(places, reviewsLists, reviewImgLists));
     }
-
-
-//    @GetMapping("/api/places/list")
-//    @Operation(summary = "지도에서 목록 버튼으로 가게 목록 조회 API", description = "현재 지도 화면의 가게 목록을 조회하는 API이며, 페이징을 포함합니다. query String 으로 page 번호를 주세요")
-//    public ApiResponse<PlaceResponseDTO.PlacePreViewListDTO> getPlacesList() {
-////        return placeService.getPlaceList();
-//        Page<Review> temp = storeQueryService.getReviewList(storeId, page);
-//        Page<Place> temp = placeService.getPlaceList()
-//        return ApiResponse.onSuccess(PlaceConverter.toPlacePreViewListDTO())
-//    }
 }

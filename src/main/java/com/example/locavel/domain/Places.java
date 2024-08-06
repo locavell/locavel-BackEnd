@@ -6,10 +6,6 @@ import com.example.locavel.domain.enums.Region;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter

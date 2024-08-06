@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class PlaceConverter {
 
-    public static PlaceResponseDTO.PlaceDetailDTO toPlaceDetailDTO(Places places) {
+    public static PlaceResponseDTO.PlaceDetailDTO toPlaceDetailDTO(Places places, List<String> reviewImgList) {
         return PlaceResponseDTO.PlaceDetailDTO.builder()
                 .name(places.getName())
                 .placeId(places.getId())
@@ -22,6 +22,7 @@ public class PlaceConverter {
                 .generalRating(places.getRating())
                 .longitude(places.getLongitude())
                 .latitude(places.getLatitude())
+                .reviewImgList(reviewImgList)
 //                .travelerRating()
                 .build();
     }

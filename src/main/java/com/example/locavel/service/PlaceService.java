@@ -9,7 +9,6 @@ import com.example.locavel.domain.enums.Category;
 import com.example.locavel.domain.enums.Region;
 import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
-import com.example.locavel.repository.ReviewRepository;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import jakarta.transaction.Transactional;
@@ -115,18 +114,4 @@ public class PlaceService {
         Category cat = Category.valueOf(category.toLowerCase());
         return placeRepository.findByCategory(cat);
     }
-
-//    public PlaceResponseDTO.FilterPlaceListDTO getFilterPlaceListDTO(String category) {
-//        List<Places> places = getFilterPlaces(category);
-//        return placeConverter.toFilterPlaceListDTO(places, reviewService);
-//    }
-
-//    public Page<Places> getPlaceList(Region region, Integer page) {
-//
-//        Places place = placeRepository.findById(StoreId).get();
-//
-//        Page<Places> placePage = placeRepository.findAllByPlace(place, PageRequest.of(page, 10));
-//        return placePage;
-//
-//    }
 }
