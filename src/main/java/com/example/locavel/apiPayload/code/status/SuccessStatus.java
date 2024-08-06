@@ -13,6 +13,9 @@ public enum SuccessStatus implements BaseCode {
     //일반적인 응답
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
 
+    //유저
+    USER_PROFILE_UPDATED(HttpStatus.OK, "USER2002", "프로필이 정상적으로 수정되었습니다."),
+
     //리뷰
     REVIEW_CREATE_OK(HttpStatus.OK,"REVIEW2001", "리뷰가 정상적으로 등록되었습니다."),
     REVIEW_UPDATE_OK(HttpStatus.OK,"REVIEW2002", "리뷰가 정상적으로 수정되었습니다."),
