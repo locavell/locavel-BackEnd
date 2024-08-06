@@ -1,4 +1,4 @@
-package com.example.locavel.handler;
+package com.example.locavel.apiPayload.exception.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

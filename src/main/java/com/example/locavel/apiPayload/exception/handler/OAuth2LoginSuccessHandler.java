@@ -1,4 +1,4 @@
-package com.example.locavel.handler;
+package com.example.locavel.apiPayload.exception.handler;
 
 import com.example.locavel.domain.enums.Access;
 import com.example.locavel.domain.oauth.CustomOAuth2User;

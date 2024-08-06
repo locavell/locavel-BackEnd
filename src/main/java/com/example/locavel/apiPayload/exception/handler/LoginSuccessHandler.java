@@ -1,4 +1,4 @@
-package com.example.locavel.handler;
+package com.example.locavel.apiPayload.exception.handler;
 
 import com.example.locavel.repository.UserRepository;
 import com.example.locavel.service.jwtService.JwtService;
