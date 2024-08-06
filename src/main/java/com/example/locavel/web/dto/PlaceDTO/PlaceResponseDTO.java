@@ -92,4 +92,28 @@ public class PlaceResponseDTO {
         String category;
         String categoryImgUrl;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FilterPlaceDTO{
+        Long placeId;
+        String name;
+        String address;
+        Float rating;
+        int reviewCount;
+        List<String> reviewImgList;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FilterPlaceListDTO{
+        List<FilterPlaceDTO> filterPlaceDTOList;
+        String category;
+    }
+
+
 }

@@ -5,7 +5,9 @@ import com.example.locavel.apiPayload.code.status.ErrorStatus;
 import com.example.locavel.apiPayload.exception.handler.ReviewsHandler;
 import com.example.locavel.converter.PlaceConverter;
 import com.example.locavel.domain.Places;
+import com.example.locavel.domain.Reviews;
 import com.example.locavel.service.PlaceService;
+import com.example.locavel.service.ReviewService;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,12 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class PlaceRestController {
 
     private final PlaceService placeService;
+    private final ReviewService reviewService;
 
     @GetMapping("/api/places/{placeId}")
     @Operation(summary = "특정 장소 상세 조회 API", description = "특정 장소를 상세 조회하는 API입니다. query String으로 place 번호를 주세요")
@@ -55,9 +59,23 @@ public class PlaceRestController {
     @GetMapping("/api/places/filters")
     @Operation(summary = "스팟, 푸드, 액티비티 필터 조회(마커) API", description = "지도뷰에서 스팟, 푸드, 액티비티 필터로 장소 위치를 조회하는 API입니다.")
     public ApiResponse<PlaceResponseDTO.FilterMarkerListDTO> getFilterMarker(@RequestParam String category){
-        List<Places> places = placeService.getFilterMarkers(category);
+        List<Places> places = placeService.getFilterPlaces(category);
         return ApiResponse.onSuccess(PlaceConverter.toFilterMarkerListDTO(places));
+    }
 
+    @GetMapping("/api/places/list")
+    public ApiResponse<PlaceResponseDTO.FilterPlaceListDTO> getFilterPlaceList(@RequestParam String category) {
+        List<Places> places = placeService.getFilterPlaces(category);
+
+        List<List<Reviews>> reviewsLists = places.stream()
+                .map(reviewService::getReviewsByPlace)
+                .collect(Collectors.toList());
+
+        List<List<String>> reviewImgLists = places.stream()
+                .map(reviewService::getReviewImagesByPlace)
+                .collect(Collectors.toList());
+
+        return ApiResponse.onSuccess(PlaceConverter.toFilterPlaceListDTO(places, reviewsLists, reviewImgLists));
     }
 
 

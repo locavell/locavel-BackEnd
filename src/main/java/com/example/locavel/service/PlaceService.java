@@ -3,18 +3,15 @@ package com.example.locavel.service;
 import com.example.locavel.apiPayload.code.status.ErrorStatus;
 import com.example.locavel.apiPayload.exception.handler.PlacesHandler;
 import com.example.locavel.converter.PlaceConverter;
-import com.example.locavel.converter.ReviewConverter;
 import com.example.locavel.domain.PlaceImg;
 import com.example.locavel.domain.Places;
-import com.example.locavel.domain.ReviewImg;
-import com.example.locavel.domain.Reviews;
 import com.example.locavel.domain.enums.Category;
 import com.example.locavel.domain.enums.Region;
 import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
+import com.example.locavel.repository.ReviewRepository;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
-import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -119,11 +111,15 @@ public class PlaceService {
         return places;
     }
 
-    public List<Places> getFilterMarkers(String category){
-        // Enum에서 카테고리 변환
+    public List<Places> getFilterPlaces(String category) {
         Category cat = Category.valueOf(category.toLowerCase());
         return placeRepository.findByCategory(cat);
     }
+
+//    public PlaceResponseDTO.FilterPlaceListDTO getFilterPlaceListDTO(String category) {
+//        List<Places> places = getFilterPlaces(category);
+//        return placeConverter.toFilterPlaceListDTO(places, reviewService);
+//    }
 
 //    public Page<Places> getPlaceList(Region region, Integer page) {
 //

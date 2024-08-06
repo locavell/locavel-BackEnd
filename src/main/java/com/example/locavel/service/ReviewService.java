@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,5 +122,16 @@ public class ReviewService {
         Long generalCount = reviewRepository.countAllByPlaceAndTraveler(place, Traveler.NO);
 
         return ReviewConverter.toPlaceReviewSummaryDTO(totalRating, totalCount, generalRating, generalCount, travelerRating, travelerCount);
+    }
+
+    public List<Reviews> getReviewsByPlace(Places place) {
+        return reviewRepository.findAllByPlace(place);
+    }
+
+    public List<String> getReviewImagesByPlace(Places place) {
+        return reviewRepository.findAllByPlace(place).stream()
+                .flatMap(review -> review.getReviewImgList().stream())
+                .map(ReviewImg::getImgUrl)
+                .collect(Collectors.toList());
     }
 }
