@@ -37,4 +37,15 @@ public class UserConverter {
                 .deleted_at(LocalDateTime.now())
                 .build();
     }
+
+    public UserResponseDto.UpdateUserDTO toUpdateUserDTO(User user){
+        return UserResponseDto.UpdateUserDTO.builder()
+                .user_id(user.getId())
+                .name(user.getUsername())
+                .nickname(user.getNickname())
+                .introduce(user.getIntroduce())
+                .phone_num(user.getPhone_num())
+                .updated_at(LocalDateTime.now())
+                .build();
+    }
 }
