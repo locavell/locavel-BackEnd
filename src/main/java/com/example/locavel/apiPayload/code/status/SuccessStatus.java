@@ -15,6 +15,7 @@ public enum SuccessStatus implements BaseCode {
 
     //유저
     USER_PROFILE_UPDATED(HttpStatus.OK, "USER2002", "프로필이 정상적으로 수정되었습니다."),
+    USER_FOUND(HttpStatus.OK,"USER2005","유저를 정상적으로 조회했습니다"),
 
     //리뷰
     REVIEW_CREATE_OK(HttpStatus.OK,"REVIEW2001", "리뷰가 정상적으로 등록되었습니다."),
