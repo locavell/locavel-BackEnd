@@ -10,6 +10,7 @@ import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,5 +47,11 @@ public class UserController {
     public ApiResponse<UserResponseDto.DeleteUserResultDTO> deleteUser(HttpServletRequest httpServletRequest){
         User user = userCommandService.deleteUser(httpServletRequest);
         return ApiResponse.of(SuccessStatus.USER_DELETED, userConverter.toDeleteResultDTO(user));
+    }
+
+    @PatchMapping("/api/auth")
+    public ApiResponse<UserResponseDto.UpdateUserDTO> updateUser(HttpServletRequest httpServletRequest, @RequestBody UserRequestDto.UpdateUserDTO updateUserDTO){
+        User user = userCommandService.updateUser(httpServletRequest, updateUserDTO);
+        return ApiResponse.of(SuccessStatus.USER_UPDATED, userConverter.toUpdateUserDTO(user));
     }
 }
