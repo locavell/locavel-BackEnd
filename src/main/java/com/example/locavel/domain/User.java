@@ -65,6 +65,8 @@ public class User extends BaseEntity {
 
     private LocalDateTime certified_at;//인증한 날짜
 
+    private LocalDateTime deleted_at;
+
     //유저 권한 GUEST -> USER 로
     public void authorizeUser(){
         this.access = Access.USER;
