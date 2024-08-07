@@ -67,6 +67,8 @@ public class User extends BaseEntity {
 
     private LocalDateTime deleted_at;
 
+    private LocalDateTime updated_at;
+
     //유저 권한 GUEST -> USER 로
     public void authorizeUser(){
         this.access = Access.USER;
@@ -77,6 +79,7 @@ public class User extends BaseEntity {
         this.password = passwordEncoder.encode(this.password);
     }
 
+    //필요한 setter 만 생성할 것
     public void updateRefreshToken(String updateRefreshToken){
         this.refreshToken = updateRefreshToken;
     }
@@ -84,4 +87,12 @@ public class User extends BaseEntity {
     public void setProfileImage(String profileImage){
         this.profileImage = profileImage;
     }
+
+    public void setUserName(String username){this.username = username;}
+
+    public void setNickname(String nickname){this.nickname = nickname;}
+
+    public void setIntroduce(String introduce){this.introduce = introduce;}
+
+    public void setPhone_num(String phone_num){this.phone_num = phone_num;}
 }
