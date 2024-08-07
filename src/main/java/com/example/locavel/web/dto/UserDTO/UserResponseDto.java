@@ -39,4 +39,13 @@ public class UserResponseDto {
         private LocalDateTime updated_at;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteUserResultDTO{
+        private Long user_id;
+        private LocalDateTime deleted_at;
+    }
+
 }
