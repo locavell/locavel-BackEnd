@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -48,4 +49,17 @@ public class UserResponseDto {
         private LocalDateTime deleted_at;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateUserDTO{
+        private Long user_id;
+        private String name;
+        private String nickname;
+        private String introduce;
+        private String phone_num;
+        private LocalDateTime updated_at;
+
+    }
 }
