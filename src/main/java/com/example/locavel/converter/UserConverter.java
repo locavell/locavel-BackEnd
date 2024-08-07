@@ -25,6 +25,7 @@ public class UserConverter {
                 .grade(user.getGrade())
                 .role(user.getRole())
                 .created_at(user.getCreated_at())
+                .updated_at(user.getUpdated_at())
                 .build();
     }
 }
