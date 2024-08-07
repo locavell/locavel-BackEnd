@@ -13,4 +13,6 @@ public interface UserCommandService {
     User updateUserProfile(HttpServletRequest httpServletRequest, UserRequestDto.UpdateUserProfileDto request);
 
     User deleteUser(HttpServletRequest httpServletRequest);
+
+    User updateUser(HttpServletRequest httpServletRequest, UserRequestDto.UpdateUserDTO updateUserDTO);
 }

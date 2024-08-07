@@ -82,4 +82,16 @@ public class UserCommandServiceImpl implements UserCommandService{
         userRepository.delete(user);
         return user;
     }
+
+    @Override
+    @Transactional
+    public User updateUser(HttpServletRequest httpServletRequest, UserRequestDto.UpdateUserDTO updateUserDTO){
+        String email = httpServletRequest.getUserPrincipal().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+        if(updateUserDTO.getName() != null) user.setUserName(updateUserDTO.getName());
+        if(updateUserDTO.getNickname() != null) user.setNickname(updateUserDTO.getNickname());
+        if(updateUserDTO.getIntroduce() != null) user.setIntroduce(updateUserDTO.getIntroduce());
+        if(updateUserDTO.getPhone_num() != null) user.setPhone_num(updateUserDTO.getPhone_num());
+        return user;
+    }
 }
