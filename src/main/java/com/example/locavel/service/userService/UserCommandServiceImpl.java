@@ -62,4 +62,16 @@ public class UserCommandServiceImpl implements UserCommandService{
 
         return user;
     }
+
+    @Override
+    public User getUser(HttpServletRequest httpServletRequest){
+        String email = httpServletRequest.getUserPrincipal().getName();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    @Override
+    public User findUser(Long id){
+        return userRepository.findById(id).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+    }
+
 }

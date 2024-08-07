@@ -6,7 +6,10 @@ import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserCommandService {
+    public User getUser(HttpServletRequest httpServletRequest);
+    public User findUser(Long id);
     void signUp(UserSignUpDto userSignUpDto) throws Exception;
 
     User updateUserProfile(HttpServletRequest httpServletRequest, UserRequestDto.UpdateUserProfileDto request);
+
 }
