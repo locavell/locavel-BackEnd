@@ -74,4 +74,12 @@ public class UserCommandServiceImpl implements UserCommandService{
         return userRepository.findById(id).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
     }
 
+    @Override
+    @Transactional
+    public User deleteUser(HttpServletRequest httpServletRequest){
+        String email = httpServletRequest.getUserPrincipal().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+        userRepository.delete(user);
+        return user;
+    }
 }
