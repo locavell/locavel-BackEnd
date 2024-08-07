@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserCommandService userCommandService;
+    private final UserConverter userConverter;
 
     @PostMapping("/api/auth/sign-up")
     public String signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception{
@@ -33,5 +34,11 @@ public class UserController {
     public ApiResponse<UserResponseDto.UpdateUserProfileResultDTO> updateUserProfile(HttpServletRequest httpServletRequest, @RequestBody UserRequestDto.UpdateUserProfileDto request){
         User user = userCommandService.updateUserProfile(httpServletRequest, request);
         return ApiResponse.of(SuccessStatus.USER_PROFILE_UPDATED, UserConverter.updateUserProfileResultDTO(user));
+    }
+
+    @GetMapping("/api/auth")
+    public ApiResponse<UserResponseDto.getUserDTO> getUser(HttpServletRequest httpServletRequest){
+        User user = userCommandService.getUser(httpServletRequest);
+        return ApiResponse.of(SuccessStatus.USER_FOUND, userConverter.toGetUserResultDTO(user));
     }
 }
