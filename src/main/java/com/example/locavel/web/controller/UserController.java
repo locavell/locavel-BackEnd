@@ -41,4 +41,10 @@ public class UserController {
         User user = userCommandService.getUser(httpServletRequest);
         return ApiResponse.of(SuccessStatus.USER_FOUND, userConverter.toGetUserResultDTO(user));
     }
+
+    @DeleteMapping("/api/auth")
+    public ApiResponse<UserResponseDto.DeleteUserResultDTO> deleteUser(HttpServletRequest httpServletRequest){
+        User user = userCommandService.deleteUser(httpServletRequest);
+        return ApiResponse.of(SuccessStatus.USER_DELETED, userConverter.toDeleteResultDTO(user));
+    }
 }
