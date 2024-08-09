@@ -1,9 +1,9 @@
 name: Deploy To EC2
 
 on:
-  push:
+  pull_request:
     branches:
-      - feat/#6
+      - dev
 
 jobs:
   deploy:
