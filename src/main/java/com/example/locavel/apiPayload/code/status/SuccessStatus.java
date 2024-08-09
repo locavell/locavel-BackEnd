@@ -14,6 +14,7 @@ public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
 
     //유저
+    USER_TERM_AGREED(HttpStatus.OK,"USER2000", "약관동의가 정상적으로 등록되었습니다."),
     USER_PROFILE_UPDATED(HttpStatus.OK, "USER2002", "프로필이 정상적으로 수정되었습니다."),
     USER_UPDATED(HttpStatus.OK, "USER2002", "유저 정보가 정상적으로 수정되었습니다."),
     USER_DELETED(HttpStatus.OK,"USER2003", "유저가 정상적으로 삭제되었습니다."),
