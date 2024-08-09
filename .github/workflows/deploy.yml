@@ -47,7 +47,7 @@ jobs:
       - name: Docker 이미지 생성
         run: docker build -t locavel-server .
 
-      - name: Docker 이미지 생성
+      - name: Docker 이미지에 Tag 붙이기
         run: docker tag locavel-server ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
 
       - name: ECR에 Docker 이미지 Push 하기
