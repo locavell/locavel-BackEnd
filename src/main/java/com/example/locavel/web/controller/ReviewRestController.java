@@ -104,4 +104,11 @@ public class ReviewRestController {
         ReviewResponseDTO.placeReviewSummaryDTO response = reviewService.getPlaceReviewSummary(placeId);
         return ApiResponse.of(SuccessStatus.REVIEW_SUMMARY_GET_OK,response);
     }
+
+    @Operation(summary = "리뷰 상세조회", description = "하나의 리뷰를 상세 조회합니다.")
+    @GetMapping(value = "/{reviewId}")
+    public ApiResponse<ReviewResponseDTO.ReviewDetailDTO> getReviewDetail(@PathVariable(name="reviewId")Long reviewId) {
+        ReviewResponseDTO.ReviewDetailDTO response = reviewService.getReviewDetail(reviewId);
+        return ApiResponse.of(SuccessStatus.REVIEW_DETAIL_GET_OK,response);
+    }
 }

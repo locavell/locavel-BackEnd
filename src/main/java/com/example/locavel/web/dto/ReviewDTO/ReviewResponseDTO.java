@@ -94,4 +94,22 @@ public class ReviewResponseDTO {
         Float travelerRating;
         Long travelerReviewCount;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReviewDetailDTO {
+        Long reviewId;
+        String placeName;
+        String address;
+        List<String> reviewImgList;
+        String comment;
+        Float Rating;
+        String traveler;
+        String reviewerName;
+        String reviewerImg;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
+    }
 }
