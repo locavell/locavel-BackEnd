@@ -5,6 +5,7 @@ import com.example.locavel.domain.enums.Access;
 import com.example.locavel.domain.enums.Grade;
 import com.example.locavel.domain.enums.Role;
 import com.example.locavel.domain.enums.SocialType;
+import com.example.locavel.domain.mapping.TermAgreement;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -68,6 +71,10 @@ public class User extends BaseEntity {
     private LocalDateTime deleted_at;
 
     private LocalDateTime updated_at;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TermAgreement> termAgreementList = new ArrayList<>();
 
     //유저 권한 GUEST -> USER 로
     public void authorizeUser(){
