@@ -18,14 +18,12 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: application.yml 파일 생성
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.yml
-
-      - name: application-jwt.yml 파일 생성
-        run: echo "${{ secrets.APPLICATION_JWT }}" > src/main/resources/application-jwt.yml
-
-      - name: application-oauth.yml 파일 생성
-        run: echo "${{ secrets.APPLICATION_OAUTH }}" > src/main/resources/application-oauth.yml
+      - name: yml 파일 생성
+        run: |
+          mkdir -p ./src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_JWT }}" > ./src/main/resources/application-jwt.yml
+          echo "${{ secrets.APPLICATION_OAUTH }}" > ./src/main/resources/application-oauth.yml
 
       - name: 테스트 및 빌드
         run: ./gradlew clean build
