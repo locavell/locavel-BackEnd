@@ -53,6 +53,7 @@ jobs:
       - name: ECR에 Docker 이미지 Push 하기
         run: docker push ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
 
+
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3
         with:
