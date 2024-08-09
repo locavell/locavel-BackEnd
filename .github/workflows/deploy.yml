@@ -2,7 +2,8 @@ name: Deploy To EC2
 
 on:
   push:
-    - feat/#6
+    branches:
+      - feat/#6
 
 jobs:
   deploy:
