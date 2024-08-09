@@ -124,6 +124,13 @@ public class ReviewService {
         return ReviewConverter.toPlaceReviewSummaryDTO(totalRating, totalCount, generalRating, generalCount, travelerRating, travelerCount);
     }
 
+    public ReviewResponseDTO.ReviewDetailDTO getReviewDetail(Long reviewId) {
+        Reviews review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new ReviewsHandler(ErrorStatus.REVIEW_NOT_FOUND));
+        List<String> reviewImgList = reviewImgRepository.findAllImgUrlByReview(reviewId);
+        return ReviewConverter.toReviewDetailDTO(review, reviewImgList);
+    }
+
     public List<Reviews> getReviewsByPlace(Places place) {
         return reviewRepository.findAllByPlace(place);
     }

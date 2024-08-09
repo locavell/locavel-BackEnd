@@ -26,6 +26,7 @@ public enum SuccessStatus implements BaseCode {
     REVIEW_DELETE_OK(HttpStatus.OK,"REVIEW2003", "리뷰가 정상적으로 삭제되었습니다."),
     REVIEW_GET_OK(HttpStatus.OK,"REVIEW2004","리뷰 목록을 조회했습니다."),
     REVIEW_SUMMARY_GET_OK(HttpStatus.OK,"REVIEW2005", "리뷰 요약을 조회했습니다."),
+    REVIEW_DETAIL_GET_OK(HttpStatus.OK,"REVIEW2006", "리뷰를 상세조회했습니다."),
     ;
 
     private final HttpStatus httpStatus;
