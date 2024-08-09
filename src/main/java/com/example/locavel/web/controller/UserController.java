@@ -2,9 +2,14 @@ package com.example.locavel.web.controller;
 
 import com.example.locavel.apiPayload.ApiResponse;
 import com.example.locavel.apiPayload.code.status.SuccessStatus;
+import com.example.locavel.converter.TermConverter;
 import com.example.locavel.converter.UserConverter;
 import com.example.locavel.domain.User;
+import com.example.locavel.domain.mapping.TermAgreement;
+import com.example.locavel.service.termService.TermService;
 import com.example.locavel.service.userService.UserCommandService;
+import com.example.locavel.web.dto.TermDTO.TermRequestDTO;
+import com.example.locavel.web.dto.TermDTO.TermResponseDTO;
 import com.example.locavel.web.dto.UserDTO.UserRequestDto;
 import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
@@ -13,11 +18,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserCommandService userCommandService;
+    private final TermService termService;
     private final UserConverter userConverter;
 
     @PostMapping("/api/auth/sign-up")
@@ -53,5 +61,12 @@ public class UserController {
     public ApiResponse<UserResponseDto.UpdateUserDTO> updateUser(HttpServletRequest httpServletRequest, @RequestBody UserRequestDto.UpdateUserDTO updateUserDTO){
         User user = userCommandService.updateUser(httpServletRequest, updateUserDTO);
         return ApiResponse.of(SuccessStatus.USER_UPDATED, userConverter.toUpdateUserDTO(user));
+    }
+
+    //약관동의
+    @PostMapping("/api/auth/terms")
+    public ApiResponse<TermResponseDTO.TermAgreeResultDTO> termAgree(@RequestBody TermRequestDTO.TermAgreeDTO termAgreeDTO){
+        List<TermAgreement> agree = termService.agree(termAgreeDTO);
+        return ApiResponse.of(SuccessStatus.USER_TERM_AGREED, TermConverter.toTermAgreeResultDTO(agree));
     }
 }
