@@ -54,7 +54,6 @@ jobs:
         run: docker push ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
 
 
-
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -63,7 +62,14 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop locavel-server || true
-            docker rm locavel-server || true
+            if [ "$(docker ps -q -f name=locavel-server)" ]; then
+                        docker stop locavel-server
+                        docker rm locavel-server
+            fi
             docker pull ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
             docker run -d --name locavel-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
+#          script: |
+#            docker stop locavel-server || true
+#            docker rm locavel-server || true
+#            docker pull ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
+#            docker run -d --name locavel-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
