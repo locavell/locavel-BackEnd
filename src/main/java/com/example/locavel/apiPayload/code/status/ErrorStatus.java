@@ -38,8 +38,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
 
     //유저
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001","해당 유저가 존재하지 않습니다.");
-    ;
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001","해당 유저가 존재하지 않습니다."),
+
+
+    //약관 동의
+    TERMS_NOT_FOUND(HttpStatus.NOT_FOUND, "TERM4001", "약관 동의가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -1,9 +1,9 @@
 name: Deploy To EC2
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - dev
 
 jobs:
   deploy:
@@ -18,14 +18,21 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: application.yml 파일 생성
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
+      - name: yml 파일 생성
+        run: |
+          mkdir -p ./src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_JWT }}" > ./src/main/resources/application-jwt.yml
+          echo "${{ secrets.APPLICATION_OAUTH }}" > ./src/main/resources/application-oauth.yml
+
+      - name: gradlew 파일 실행 권한 부여
+        run: chmod +x ./gradlew
 
       - name: 테스트 및 빌드
         run: ./gradlew clean build
 
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
-        uses: aws-actions/configure-aws-credential@v4
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ap-northeast-2
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -38,12 +45,11 @@ jobs:
       - name: Docker 이미지 생성
         run: docker build -t locavel-server .
 
-      - name: Docker 이미지 생성
-        run: docker tag locavel-server ${{ steps.login-ecr.outputs.registry }}
+      - name: Docker 이미지에 Tag 붙이기
+        run: docker tag locavel-server ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
 
       - name: ECR에 Docker 이미지 Push 하기
         run: docker push ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
-
 
 
       - name: SSH로 EC2에 접속하기

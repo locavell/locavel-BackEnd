@@ -5,6 +5,7 @@ import com.example.locavel.domain.enums.Access;
 import com.example.locavel.domain.enums.Grade;
 import com.example.locavel.domain.enums.Role;
 import com.example.locavel.domain.enums.SocialType;
+import com.example.locavel.domain.mapping.TermAgreement;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -65,6 +68,14 @@ public class User extends BaseEntity {
 
     private LocalDateTime certified_at;//인증한 날짜
 
+    private LocalDateTime deleted_at;
+
+    private LocalDateTime updated_at;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TermAgreement> termAgreementList = new ArrayList<>();
+
     //유저 권한 GUEST -> USER 로
     public void authorizeUser(){
         this.access = Access.USER;
@@ -75,6 +86,7 @@ public class User extends BaseEntity {
         this.password = passwordEncoder.encode(this.password);
     }
 
+    //필요한 setter 만 생성할 것
     public void updateRefreshToken(String updateRefreshToken){
         this.refreshToken = updateRefreshToken;
     }
@@ -82,4 +94,12 @@ public class User extends BaseEntity {
     public void setProfileImage(String profileImage){
         this.profileImage = profileImage;
     }
+
+    public void setUserName(String username){this.username = username;}
+
+    public void setNickname(String nickname){this.nickname = nickname;}
+
+    public void setIntroduce(String introduce){this.introduce = introduce;}
+
+    public void setPhone_num(String phone_num){this.phone_num = phone_num;}
 }

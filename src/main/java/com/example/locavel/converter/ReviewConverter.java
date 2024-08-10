@@ -126,6 +126,26 @@ public class ReviewConverter {
                 .build();
     }
 
+    public static ReviewResponseDTO.ReviewDetailDTO toReviewDetailDTO(
+            Reviews review,
+            List<String> reviewImgList) {
+        User user = review.getUser();
+        Places place = review.getPlace();
+        return ReviewResponseDTO.ReviewDetailDTO.builder()
+                .reviewerImg(user.getProfileImage())
+                .reviewerName(user.getNickname())
+                .reviewId(review.getId())
+                .address(place.getAddress())
+                .Rating(review.getRating())
+                .traveler(review.getTraveler().getViewName())
+                .reviewImgList(reviewImgList)
+                .updatedAt(review.getUpdated_at())
+                .createdAt(review.getCreated_at())
+                .placeName(place.getName())
+                .comment(review.getComment())
+                .build();
+    }
+
     private final ReviewImgRepository reviewImgRepository;
     public List<String> getAllReviewImgUrls(Reviews review) {
         List<ReviewImg> reviewImgList = reviewImgRepository.findAllByReviews(review);
