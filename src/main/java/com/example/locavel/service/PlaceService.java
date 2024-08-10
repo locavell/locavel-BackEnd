@@ -114,4 +114,8 @@ public class PlaceService {
         Category cat = Category.valueOf(category.toLowerCase());
         return placeRepository.findByCategory(cat);
     }
+
+    public List<Places> recommendNearbyPlaces(double latitude, double longitude, double radius) {
+        return placeRepository.findNearbyPlaces(latitude, longitude, radius);
+    }
 }

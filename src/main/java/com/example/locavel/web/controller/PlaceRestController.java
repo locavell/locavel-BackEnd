@@ -69,6 +69,7 @@ public class PlaceRestController {
     }
 
     @GetMapping("/api/places/list")
+    @Operation(summary = "스팟, 푸드, 액티비티 필터 조회(목록 버튼) API", description = "스팟, 푸드, 액티비티 필터로 장소 목록을 조회하는 API입니다.")
     public ApiResponse<PlaceResponseDTO.FilterPlaceListDTO> getFilterPlaceList(@RequestParam String category) {
         List<Places> places = placeService.getFilterPlaces(category);
 
@@ -82,4 +83,22 @@ public class PlaceRestController {
 
         return ApiResponse.onSuccess(PlaceConverter.toFilterPlaceListDTO(places, reviewsLists, reviewImgLists));
     }
+
+    @GetMapping("/api/places/search-results")
+    public ApiResponse<List<PlaceResponseDTO.FilterPlaceDTO>> searchPlace(@RequestParam double latitude,  // 사용자의 위도
+                                                                    @RequestParam double longitude) {   // 사용자의 경도
+        double radius = 200;
+        List<Places> places = placeService.recommendNearbyPlaces(latitude, longitude, radius);
+
+        List<List<Reviews>> reviewsLists = places.stream()
+                .map(reviewService::getReviewsByPlace)
+                .collect(Collectors.toList());
+
+        List<List<String>> reviewImgLists = places.stream()
+                .map(reviewService::getReviewImagesByPlace)
+                .collect(Collectors.toList());
+
+        return ApiResponse.onSuccess(PlaceConverter.toRecommendPlace(places, reviewsLists, reviewImgLists));
+    }
+
 }

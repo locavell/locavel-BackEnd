@@ -74,6 +74,10 @@ public class SecurityConfig {
                         // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
                         .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico").permitAll()
                         .requestMatchers("/api/auth/sign-up", "/api/auth/login", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 로그인 접근 가능
+                        //TODO : 리뷰 관련 api 일단 모두 허용, 추후 삭제
+                        .requestMatchers("/api/reviews/**").permitAll()
+                        //TODO : 장소 관련 api 일단 모두 허용, 추후 삭제
+                        .requestMatchers("/api/places/**").permitAll()
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")

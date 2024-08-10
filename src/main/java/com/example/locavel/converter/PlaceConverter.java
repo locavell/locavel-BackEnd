@@ -126,4 +126,14 @@ public class PlaceConverter {
                 .category(places.get(0).getCategory().toString())
                 .build();
     }
+
+    public static List<PlaceResponseDTO.FilterPlaceDTO> toRecommendPlace(List<Places> places, List<List<Reviews>> reviewsLists, List<List<String>> reviewImgLists) {
+        return places.stream()
+                .map(place -> toFilterPlaceDTO(
+                        place,
+                        reviewsLists.get(places.indexOf(place)),
+                        reviewImgLists.get(places.indexOf(place))
+                ))
+                .collect(Collectors.toList());
+    }
 }
