@@ -16,7 +16,7 @@ public enum Traveler {
     // 유저의 현지인/여행객 판단
     public static Traveler of(Places place, User user) {
         String location = user.getLocation();
-        String placeAddress = place.getRegion().getAddress();
+        String placeAddress = place.getAddress();
         System.out.println("location = " + location);
         System.out.println("placeAddress = " + placeAddress);
         if (placeAddress.contains(location)) {

@@ -88,3 +88,5 @@ public class PlaceRestController {
 //        return ApiResponse.onSuccess(PlaceConverter.toPlacePreViewListDTO())
 //    }
 }
+
+// 지역명을 받고 해당 지역에 속하는
