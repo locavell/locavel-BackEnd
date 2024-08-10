@@ -46,24 +46,29 @@ public class PlaceService {
 
     public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
         MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
+        Places place = null;
+
         if (response == null) {
-            throw new RuntimeException("Failed to get coordinates from address");
-        }
-        double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
-        double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
-        String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
+            return place;
+        }else {
+            double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
+            double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
+            String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
 
-        if(placeRepository.findByAddress(roadAddress) != null){
-            throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
+
+            if (placeRepository.findByAddress(roadAddress) != null) {
+                throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
+            }
+
+            Region region = Region.fromAddress(roadAddress);
+            place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
+
+            if (placeImgUrls != null && !placeImgUrls.isEmpty()) {
+                uploadPlaceImg(placeImgUrls, place, false);
+            }
+            return placeRepository.save(place);
         }
 
-        Region region = Region.fromAddress(roadAddress);
-        Places place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
-
-        if(placeImgUrls != null && !placeImgUrls.isEmpty()) {
-            uploadPlaceImg(placeImgUrls, place, false);
-        }
-        return placeRepository.save(place);
     }
 
     private Mono<MapResponseDTO> getCoordinatesFromAddress(String address) {
@@ -79,13 +84,13 @@ public class PlaceService {
                 })
                 .map(response -> {
                     if (response == null) {
-                        throw new RuntimeException("API response is null");
+                        throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);
                     }
                     if (!"OK".equals(response.getStatus())) {
-                        throw new RuntimeException("API response status is not OK: " + response.getStatus() + " - " + response.getErrorMessage());
+                        throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);
                     }
                     if (response.getAddresses() == null || response.getAddresses().isEmpty()) {
-                        throw new RuntimeException("No addresses found in API response");
+                        throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);
                     }
                     return response;
                 });
