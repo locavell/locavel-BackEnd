@@ -6,6 +6,9 @@ import com.example.locavel.domain.enums.Region;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -43,4 +46,7 @@ public class Places extends BaseEntity {
     private Float rating;
 
     private String telephoneNumber;
+
+    @OneToMany(mappedBy = "place")
+    private List<Reviews> reviewList = new ArrayList<>();
 }

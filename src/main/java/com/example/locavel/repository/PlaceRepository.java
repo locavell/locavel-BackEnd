@@ -35,4 +35,12 @@ public interface PlaceRepository extends JpaRepository<Places, Long> {
     List<Places> findNearbyPlaces(@Param("latitude")double latitude,
                                   @Param("longitude")double longitude,
                                   double radius);
+
+    @Query("SELECT p FROM Places p " +
+            "WHERE p.name LIKE %:keyword% " +
+            "OR p.description LIKE %:keyword% " +
+            "OR p.address LIKE %:keyword% ")
+    List<Places> searchByKeyword(@Param("keyword") String keyword);
+
+
 }

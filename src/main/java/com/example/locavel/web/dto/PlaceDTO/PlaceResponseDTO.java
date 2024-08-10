@@ -86,5 +86,17 @@ public class PlaceResponseDTO {
         String category;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SearchResultPlaceDTO{
+        Long placeId;
+        String name;
+        Float rating;
+        int reviewCount;
+        List<String> reviewImgList;
+    }
+
 
 }

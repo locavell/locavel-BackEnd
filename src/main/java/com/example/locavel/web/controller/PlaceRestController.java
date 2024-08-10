@@ -84,8 +84,9 @@ public class PlaceRestController {
         return ApiResponse.onSuccess(PlaceConverter.toFilterPlaceListDTO(places, reviewsLists, reviewImgLists));
     }
 
-    @GetMapping("/api/places/search-results")
-    public ApiResponse<List<PlaceResponseDTO.FilterPlaceDTO>> searchPlace(@RequestParam double latitude,  // 사용자의 위도
+    @GetMapping("/api/places/recommend-results")
+    @Operation(summary = "장소 검색 조회(내 주변 추천 장소) API", description = "검색어 입력 전 내 주변 추천 장소 목록을 조회합니다.")
+    public ApiResponse<List<PlaceResponseDTO.FilterPlaceDTO>> recommendPlace(@RequestParam double latitude,  // 사용자의 위도
                                                                     @RequestParam double longitude) {   // 사용자의 경도
         double radius = 200;
         List<Places> places = placeService.recommendNearbyPlaces(latitude, longitude, radius);
@@ -100,5 +101,13 @@ public class PlaceRestController {
 
         return ApiResponse.onSuccess(PlaceConverter.toRecommendPlace(places, reviewsLists, reviewImgLists));
     }
+
+    @GetMapping("/api/places/search-results")
+    @Operation(summary = "장소 검색 결과 조회 API", description = "검색 결과 장소 목록을 조회합니다.")
+    public ApiResponse<List<PlaceResponseDTO.SearchResultPlaceDTO>> searchPlace(@RequestParam String keyword) {
+        List<Places> places = placeService.searchPlaces(keyword);
+        return ApiResponse.onSuccess(PlaceConverter.toSearchResultPlaceListDTO(places));
+    }
+
 
 }

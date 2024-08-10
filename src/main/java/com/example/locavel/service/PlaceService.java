@@ -118,4 +118,8 @@ public class PlaceService {
     public List<Places> recommendNearbyPlaces(double latitude, double longitude, double radius) {
         return placeRepository.findNearbyPlaces(latitude, longitude, radius);
     }
+
+    public List<Places> searchPlaces(String keyword) {
+        return placeRepository.searchByKeyword(keyword);
+    }
 }
