@@ -8,35 +8,6 @@ import java.util.List;
 
 public class PlaceResponseDTO {
 
-//    @Getter
-//    @Builder
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    public static class PlacePreViewListDTO{
-//        List<PlacePreViewDTO> placeList;
-//        Integer listSize;
-//        Integer totalPage;
-//        Long totalElements;
-//        Boolean isFirst;
-//        Boolean isLast;
-//    }
-//
-//    @Getter
-//    @Builder
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    public static class PlacePreViewDTO{
-//        String name;
-//        String address;
-//        Float rating;
-//        Integer reviewCount;
-//        String category;
-//        // img 사진
-////        String longitude; //경도
-////        String latitude; //위도
-//        LocalDate createdAt;
-//    }
-
     @Getter
     @Builder
     @NoArgsConstructor
@@ -49,7 +20,7 @@ public class PlaceResponseDTO {
         double latitude; //위도
         Float generalRating;
         Float travelerRating;
-        // img reviewImage
+        List<String> reviewImgList;
     }
 
     @Builder
@@ -113,6 +84,18 @@ public class PlaceResponseDTO {
     public static class FilterPlaceListDTO{
         List<FilterPlaceDTO> filterPlaceDTOList;
         String category;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SearchResultPlaceDTO{
+        Long placeId;
+        String name;
+        Float rating;
+        int reviewCount;
+        List<String> reviewImgList;
     }
 
 

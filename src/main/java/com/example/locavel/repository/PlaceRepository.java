@@ -24,4 +24,23 @@ public interface PlaceRepository extends JpaRepository<Places, Long> {
             @Param("neLng") double neLng);
 
     List<Places> findByCategory(Category category);
+
+    @Query(value = "SELECT *, " +
+            "(6371 * acos(cos(radians(:latitude)) * cos(radians(latitude)) * " +
+            "cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) * " +
+            "sin(radians(latitude)))) AS distance " +
+            "FROM Places " +
+            "HAVING distance < :radius " +
+            "ORDER BY distance", nativeQuery = true)
+    List<Places> findNearbyPlaces(@Param("latitude")double latitude,
+                                  @Param("longitude")double longitude,
+                                  double radius);
+
+    @Query("SELECT p FROM Places p " +
+            "WHERE p.name LIKE %:keyword% " +
+            "OR p.description LIKE %:keyword% " +
+            "OR p.address LIKE %:keyword% ")
+    List<Places> searchByKeyword(@Param("keyword") String keyword);
+
+
 }
