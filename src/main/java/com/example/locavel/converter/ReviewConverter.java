@@ -26,7 +26,7 @@ public class ReviewConverter {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
-    public static Reviews toReviews(User user, Traveler traveler, Places place, ReviewRequestDTO.RevieweDTO request) {
+    public static Reviews toReviews(User user, Traveler traveler, Places place, ReviewRequestDTO.ReviewDTO request) {
         return Reviews.builder()
                 .comment(request.getComment())
                 .user(user)
