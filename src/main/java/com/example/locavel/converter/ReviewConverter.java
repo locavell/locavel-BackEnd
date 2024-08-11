@@ -60,6 +60,7 @@ public class ReviewConverter {
                 .comment(review.getComment())
                 .createdAt(review.getCreated_at())
                 .updatedAt(review.getUpdated_at())
+                .reviewerFollowerCount(user.getFollowerCount())
                 .build();
     }
     public ReviewResponseDTO.ReviewPreviewListDTO toReviewPreviewListDTO(Page<Reviews> reviewList) {
@@ -143,6 +144,7 @@ public class ReviewConverter {
                 .createdAt(review.getCreated_at())
                 .placeName(place.getName())
                 .comment(review.getComment())
+                .reviewerFollowerCount(user.getFollowerCount())
                 .build();
     }
 

@@ -33,6 +33,11 @@ public enum SuccessStatus implements BaseCode {
     PLACE_GET_OK(HttpStatus.OK, "PLACE2004", "장소를 조회했습니다."),
     PLACE_LIST_GET_OK(HttpStatus.OK, "PLACE2004", "장소 목록을 조회했습니다."),
     PLACE_MARKER_GET_OK(HttpStatus.OK, "PLACE2004", "장소 마커 정보를 조회했습니다."),
+
+    //팔로우
+    FOLLOW_OK(HttpStatus.OK, "FOLLOW2001", "팔로우가 완료되었습니다."),
+    FOLLOW_DELETE_OK(HttpStatus.OK,"FOLLOW2002","팔로우 취소가 완료되었습니다."),
+    FOLLOW_GET_OK(HttpStatus.OK,"FOLLOW2003","팔로우 목록을 조회했습니다."),
     ;
 
     private final HttpStatus httpStatus;
