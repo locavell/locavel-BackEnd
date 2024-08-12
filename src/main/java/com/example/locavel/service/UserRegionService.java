@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,14 +37,14 @@ public class UserRegionService {
         return UserRegionConverter.toUserRegionResultDTO(newUserRegion);
     }
 
-    public UserRegionResponseDTO.UserRegionResultDTO deleteInterestArea(Long userRegionId) {
-        UserRegion deleteUserRegion = userRegionRepository.findById(userRegionId).orElseThrow();
+    public UserRegionResponseDTO.UserRegionResultDTO deleteInterestArea(Long userId, Long regionId) {
+        UserRegion deleteUserRegion = userRegionRepository.findByUserIdAndRegionId(userId, regionId);
         userRegionRepository.delete(deleteUserRegion);
         return UserRegionConverter.toUserRegionResultDTO(deleteUserRegion);
     }
 
-    public List<PlaceResponseDTO.PlaceDetailDTO> getPlaces(Long userRegionId) {
-        UserRegion userRegion = userRegionRepository.findById(userRegionId).orElseThrow();
+    public List<PlaceResponseDTO.PlaceDetailDTO> getPlaces(Long userId, Long regionId) {
+        UserRegion userRegion = userRegionRepository.findByUserIdAndRegionId(userId, regionId);
         List<Places> placesList = userRegion.getRegion().getPlacesList();
         List<PlaceResponseDTO.PlaceDetailDTO> collect = placesList.stream().map(places ->
                 PlaceResponseDTO.PlaceDetailDTO.builder()
@@ -65,7 +64,7 @@ public class UserRegionService {
         List<UserRegion> userRegionList = user.getUserRegionList();
         List<UserRegionResponseDTO.UserRegionDetailsDTO> collect = userRegionList.stream().map(userRegion ->
                 UserRegionResponseDTO.UserRegionDetailsDTO.builder()
-                        .userRegionId(userRegion.getId())
+                        .regionId(userRegion.getRegion().getId())
                         .regionName(userRegion.getRegion().getName())
                         .createdAt(LocalDateTime.now())
                         .build()).collect(Collectors.toList());

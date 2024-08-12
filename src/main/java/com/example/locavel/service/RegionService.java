@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +21,7 @@ public class RegionService {
         if (district.equals("없음")) {
             throw new RegionHandler(ErrorStatus.REGION_NOT_FOUND);
         }
+        System.out.println(district);
         return regionRepository.findByName(district);
     }
 
@@ -34,7 +34,7 @@ public class RegionService {
         if (matcher.find()) {
             return matcher.group();
         } else {
-            return "";
+            return "없음";
         }
     }
 }

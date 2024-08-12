@@ -89,32 +89,81 @@ public class MakeInitData {
             Region region25 = Region.builder()
                     .name("중랑구")
                     .build();
-
-            regionRepository.save(region1);
-            regionRepository.save(region2);
-            regionRepository.save(region3);
-            regionRepository.save(region4);
-            regionRepository.save(region5);
-            regionRepository.save(region6);
-            regionRepository.save(region7);
-            regionRepository.save(region8);
-            regionRepository.save(region9);
-            regionRepository.save(region10);
-            regionRepository.save(region11);
-            regionRepository.save(region12);
-            regionRepository.save(region13);
-            regionRepository.save(region14);
-            regionRepository.save(region15);
-            regionRepository.save(region16);
-            regionRepository.save(region17);
-            regionRepository.save(region18);
-            regionRepository.save(region19);
-            regionRepository.save(region20);
-            regionRepository.save(region21);
-            regionRepository.save(region22);
-            regionRepository.save(region23);
-            regionRepository.save(region24);
-            regionRepository.save(region25);
+            if (regionRepository.findByName(region1.getName()) == null) {
+                regionRepository.save(region1);
+            }
+            if (regionRepository.findByName(region2.getName()) == null) {
+                regionRepository.save(region2);
+            }
+            if (regionRepository.findByName(region3.getName()) == null) {
+                regionRepository.save(region3);
+            }
+            if (regionRepository.findByName(region4.getName()) == null) {
+                regionRepository.save(region4);
+            }
+            if (regionRepository.findByName(region5.getName()) == null) {
+                regionRepository.save(region5);
+            }
+            if (regionRepository.findByName(region6.getName()) == null) {
+                regionRepository.save(region6);
+            }
+            if (regionRepository.findByName(region7.getName()) == null) {
+                regionRepository.save(region7);
+            }
+            if (regionRepository.findByName(region8.getName()) == null) {
+                regionRepository.save(region8);
+            }
+            if (regionRepository.findByName(region9.getName()) == null) {
+                regionRepository.save(region9);
+            }
+            if (regionRepository.findByName(region10.getName()) == null) {
+                regionRepository.save(region10);
+            }
+            if (regionRepository.findByName(region11.getName()) == null) {
+                regionRepository.save(region11);
+            }
+            if (regionRepository.findByName(region12.getName()) == null) {
+                regionRepository.save(region12);
+            }
+            if (regionRepository.findByName(region13.getName()) == null) {
+                regionRepository.save(region13);
+            }
+            if (regionRepository.findByName(region14.getName()) == null) {
+                regionRepository.save(region14);
+            }
+            if (regionRepository.findByName(region15.getName()) == null) {
+                regionRepository.save(region15);
+            }
+            if (regionRepository.findByName(region16.getName()) == null) {
+                regionRepository.save(region16);
+            }
+            if (regionRepository.findByName(region17.getName()) == null) {
+                regionRepository.save(region17);
+            }
+            if (regionRepository.findByName(region18.getName()) == null) {
+                regionRepository.save(region18);
+            }
+            if (regionRepository.findByName(region19.getName()) == null) {
+                regionRepository.save(region19);
+            }
+            if (regionRepository.findByName(region20.getName()) == null) {
+                regionRepository.save(region20);
+            }
+            if (regionRepository.findByName(region21.getName()) == null) {
+                regionRepository.save(region21);
+            }
+            if (regionRepository.findByName(region22.getName()) == null) {
+                regionRepository.save(region22);
+            }
+            if (regionRepository.findByName(region23.getName()) == null) {
+                regionRepository.save(region23);
+            }
+            if (regionRepository.findByName(region24.getName()) == null) {
+                regionRepository.save(region24);
+            }
+            if (regionRepository.findByName(region25.getName()) == null) {
+                regionRepository.save(region25);
+            }
         };
     }
 }

@@ -14,7 +14,7 @@ public class UserRegionResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UserRegionResultDTO{
-        Long userRegionId;
+        Long regionId;
         LocalDateTime createdAt;
     }
 
@@ -23,7 +23,7 @@ public class UserRegionResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UserRegionDetailsDTO{
-        Long userRegionId;
+        Long regionId;
         String regionName;
         LocalDateTime createdAt;
     }

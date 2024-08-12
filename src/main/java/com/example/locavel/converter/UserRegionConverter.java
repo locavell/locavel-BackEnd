@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class UserRegionConverter {
     public static UserRegionResponseDTO.UserRegionResultDTO toUserRegionResultDTO(UserRegion userRegion) {
         return UserRegionResponseDTO.UserRegionResultDTO.builder()
-                .userRegionId(userRegion.getId())
+                .regionId(userRegion.getRegion().getId())
                 .createdAt(LocalDateTime.now())
                 .build();
     }

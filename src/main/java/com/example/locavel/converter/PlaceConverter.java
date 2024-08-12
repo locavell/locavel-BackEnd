@@ -55,10 +55,11 @@ public class PlaceConverter {
                 .rating(request.getRating())
                 .telephoneNumber(request.getTelephoneNumber())
                 .address(roadAddress)
+                .region(region)
                 .latitude(latitude)
                 .longitude(longitude)
                 .build();
-        places.setRegion(region);
+//        places.setRegion(region);
         return places;
     }
 

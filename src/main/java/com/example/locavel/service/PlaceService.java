@@ -7,10 +7,8 @@ import com.example.locavel.domain.PlaceImg;
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.Region;
 import com.example.locavel.domain.enums.Category;
-//import com.example.locavel.domain.enums.Region;
 import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
-import com.example.locavel.repository.ReviewRepository;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import jakarta.transaction.Transactional;
@@ -50,6 +48,7 @@ public class PlaceService {
 
     public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
         MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
+        System.out.println("fff");
         if (response == null) {
             throw new RuntimeException("Failed to get coordinates from address");
         }
