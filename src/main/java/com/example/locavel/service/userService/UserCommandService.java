@@ -25,7 +25,7 @@ public interface UserCommandService {
 
     void updateMemberScoresDaily();
 
-    User calculateTravelerGradeScore(Long userId, ReviewRequestDTO.RevieweDTO request);
+    User calculateTravelerGradeScore(Long userId, ReviewRequestDTO.ReviewDTO request);
 
     Grade calculateLocalGrade(int score);
 }

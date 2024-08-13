@@ -48,6 +48,7 @@ public class ReviewResponseDTO {
         String traveler;
         String reviewerName;
         String reviewerImg;
+        Integer reviewerFollowerCount;
         List<String> reviewImgList;
         String comment;
         Float Rating;
@@ -109,6 +110,7 @@ public class ReviewResponseDTO {
         String traveler;
         String reviewerName;
         String reviewerImg;
+        Integer reviewerFollowerCount;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }

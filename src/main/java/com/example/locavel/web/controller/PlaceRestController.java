@@ -7,12 +7,14 @@ import com.example.locavel.apiPayload.exception.handler.ReviewsHandler;
 import com.example.locavel.converter.PlaceConverter;
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.Reviews;
+import com.example.locavel.domain.User;
 import com.example.locavel.service.PlaceService;
 import com.example.locavel.service.ReviewService;
 import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -49,14 +51,15 @@ public class PlaceRestController {
 
     @PostMapping(value = "/api/places", consumes = "multipart/form-data")
     @Operation(summary = "장소 등록 API", description = "새로운 장소를 등록하는 API입니다. 장소명, 별점은 필수로 입력해야 합니다.")
-    public ApiResponse<PlaceResponseDTO.PlaceResultDTO> createPlace(@Valid @RequestPart PlaceRequestDTO.PlaceDTO placeDTO,
+    public ApiResponse<PlaceResponseDTO.PlaceResultDTO> createPlace(HttpServletRequest httpServletRequest, @Valid @RequestPart PlaceRequestDTO.PlaceDTO placeDTO,
                                                                     @RequestPart(required = false) List<MultipartFile> placeImgUrls) {
         if(placeDTO.getRating() > 5 || placeDTO.getRating() <0) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
         }
         Places place = placeService.createPlace(placeDTO, placeImgUrls);
         if(place == null) {throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);}
-        Long userId = placeDTO.getUserId(); // DTO에서 userId를 가져옵니다.
+        User user = userCommandService.getUser(httpServletRequest);
+        Long userId = user.getId();
         userCommandService.updateLocalGrade(userId);
         return ApiResponse.of(SuccessStatus.PLACE_CREATE_OK, PlaceConverter.toPlaceResultDTO(place));
     }

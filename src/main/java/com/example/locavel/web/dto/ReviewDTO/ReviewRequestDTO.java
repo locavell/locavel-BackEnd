@@ -7,9 +7,7 @@ import lombok.Setter;
 public class ReviewRequestDTO {
     @Getter
     @Setter
-    public static class RevieweDTO {
-        //TODO :  JWT 토큰 추가 후 userId 삭제
-        Long userId;
+    public static class ReviewDTO {
         String comment;
         @NotNull
         Float rating;

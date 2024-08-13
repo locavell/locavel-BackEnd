@@ -162,7 +162,7 @@ public class UserCommandServiceImpl implements UserCommandService{
     }
 
     @Override
-    public User calculateTravelerGradeScore (Long userId, ReviewRequestDTO.RevieweDTO request){
+    public User calculateTravelerGradeScore (Long userId, ReviewRequestDTO.ReviewDTO request){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 

@@ -11,7 +11,6 @@ public class PlaceRequestDTO {
     public static class PlaceDTO {
         @NotNull
         String name;
-        Long userId;
         String address;
         String category;
         String telephoneNumber;

@@ -90,12 +90,18 @@ public class User extends BaseEntity {
     private LocalDateTime deleted_at;
 
     private LocalDateTime updated_at;
+    @Builder.Default
+    private Integer followingCount = 0;
+    @Builder.Default
+    private Integer followerCount = 0;
 
     private int lastCalculatedMonths;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TermAgreement> termAgreementList = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Follow> followList = new ArrayList<>();
 
     //유저 권한 GUEST -> USER 로
     public void authorizeUser(){
@@ -145,4 +151,8 @@ public class User extends BaseEntity {
     public void setTravelerGrade(Grade travelerGrade) {
         this.travelerGrade = travelerGrade;
     }
+    public void setFollowingCountPlus(){this.followingCount++;}
+    public void setFollowerCountPlus(){this.followerCount++;}
+    public void setFollowingCountMinus(){this.followingCount--;}
+    public void setFollowerCountMinus(){this.followerCount--;}
 }
