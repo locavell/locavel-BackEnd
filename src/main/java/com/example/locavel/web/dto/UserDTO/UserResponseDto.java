@@ -71,15 +71,4 @@ public class UserResponseDto {
         private Grade travelerGrade;
     }
 
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class PatchGradeResponseDto {
-        private Long user_id;
-        private Grade localGrade;
-        private Grade travelerGrade;
-        private int localGradeScore;   // 로컬 등급 점수
-        private int travelerGradeScore; // 여행객 등급 점수
-    }
 }
