@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class UserConverter {
 
     public static UserResponseDto.UpdateUserProfileResultDTO updateUserProfileResultDTO(User user){
-        return com.example.locavel.web.dto.UserDTO.UserResponseDto.UpdateUserProfileResultDTO.builder()
+        return UserResponseDto.UpdateUserProfileResultDTO.builder()
                 .profileImage(user.getProfileImage())
                 .build();
     }
@@ -60,16 +60,7 @@ public class UserConverter {
                 .build();
     }
 
-    //회원 등급 수정하기
-    public UserResponseDto.PatchGradeResponseDto patchGradeResponseDTO(User user){
-        return UserResponseDto.PatchGradeResponseDto.builder()
-                .user_id(user.getId())
-                .localGrade(user.getLocalGrade())
-                .travelerGrade(user.getTravelerGrade())
-                .localGradeScore(user.getLocalGradeScore())
-                .travelerGradeScore(user.getTravelerGradeScore())
-                .build();
-    }
+
 
 
 
