@@ -9,6 +9,7 @@ import com.example.locavel.domain.Places;
 import com.example.locavel.domain.Reviews;
 import com.example.locavel.service.PlaceService;
 import com.example.locavel.service.ReviewService;
+import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,7 @@ public class PlaceRestController {
 
     private final PlaceService placeService;
     private final ReviewService reviewService;
+    private final UserCommandService userCommandService;
 
     @GetMapping("/api/places/{placeId}")
     @Operation(summary = "특정 장소 상세 조회 API", description = "특정 장소를 상세 조회하는 API입니다. query String으로 place 번호를 주세요")
@@ -54,6 +56,8 @@ public class PlaceRestController {
         }
         Places place = placeService.createPlace(placeDTO, placeImgUrls);
         if(place == null) {throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);}
+        Long userId = placeDTO.getUserId(); // DTO에서 userId를 가져옵니다.
+        userCommandService.updateLocalGrade(userId);
         return ApiResponse.of(SuccessStatus.PLACE_CREATE_OK, PlaceConverter.toPlaceResultDTO(place));
     }
 

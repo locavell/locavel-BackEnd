@@ -8,6 +8,7 @@ import com.example.locavel.converter.ReviewConverter;
 import com.example.locavel.domain.Reviews;
 import com.example.locavel.domain.enums.Traveler;
 import com.example.locavel.service.ReviewService;
+import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.ReviewDTO.ReviewRequestDTO;
 import com.example.locavel.web.dto.ReviewDTO.ReviewResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +28,7 @@ import java.util.List;
 public class ReviewRestController {
     private final ReviewService reviewService;
     private final ReviewConverter reviewConverter;
+    private final UserCommandService userCommandService;
 
     @Operation(summary = "리뷰 등록", description = "리뷰를 등록합니다.")
     @PostMapping(value = "/{placeId}", consumes = "multipart/form-data")
@@ -41,6 +43,8 @@ public class ReviewRestController {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
         }
         ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(placeId, request, reviewImgUrls);
+        Long userId = request.getUserId();
+        userCommandService.calculateTravelerGradeScore(userId ,request); //여행객 점수를 증가시키는 로직
         return ApiResponse.of(SuccessStatus.REVIEW_CREATE_OK,response);
     }
 

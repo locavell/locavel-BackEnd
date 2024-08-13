@@ -9,6 +9,7 @@ import com.example.locavel.domain.enums.Category;
 import com.example.locavel.domain.enums.Region;
 import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
+import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import jakarta.transaction.Transactional;
@@ -30,6 +31,8 @@ public class PlaceService {
     private final PlaceImgRepository placeImgRepository;
     private final S3Uploader s3Uploader;
     private final WebClient webClient;
+    @Autowired
+    private UserCommandService userCommandService; //등급 업데이트를 위해 추가
 
     @Autowired
     public PlaceService(PlaceRepository placeRepository, PlaceImgRepository placeImgRepository, S3Uploader s3Uploader, WebClient.Builder webClientBuilder) {

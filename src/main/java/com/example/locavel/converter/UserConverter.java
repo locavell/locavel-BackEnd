@@ -1,6 +1,7 @@
 package com.example.locavel.converter;
 
 import com.example.locavel.domain.User;
+import com.example.locavel.web.dto.UserDTO.UserRequestDto;
 import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 public class UserConverter {
 
     public static UserResponseDto.UpdateUserProfileResultDTO updateUserProfileResultDTO(User user){
-        return UserResponseDto.UpdateUserProfileResultDTO.builder()
+        return com.example.locavel.web.dto.UserDTO.UserResponseDto.UpdateUserProfileResultDTO.builder()
                 .profileImage(user.getProfileImage())
                 .build();
     }
@@ -24,7 +25,8 @@ public class UserConverter {
                 .username(user.getUsername())
                 .nickname(user.getNickname())
                 .socialType(user.getSocialType())
-                .grade(user.getGrade())
+                .localGrade(user.getLocalGrade())
+                .travelerGrade(user.getTravelerGrade())
                 .role(user.getRole())
                 .created_at(user.getCreated_at())
                 .updated_at(user.getUpdated_at())
@@ -48,4 +50,28 @@ public class UserConverter {
                 .updated_at(LocalDateTime.now())
                 .build();
     }
+
+    //회원 등급 조회하기
+    public  UserResponseDto.GradeResponseDto toGetUserGradeDTO(User user){
+        return UserResponseDto.GradeResponseDto.builder()
+                .userId(user.getId())
+                .localGrade(user.getLocalGrade())
+                .travelerGrade(user.getTravelerGrade())
+                .build();
+    }
+
+    //회원 등급 수정하기
+    public UserResponseDto.PatchGradeResponseDto patchGradeResponseDTO(User user){
+        return UserResponseDto.PatchGradeResponseDto.builder()
+                .user_id(user.getId())
+                .localGrade(user.getLocalGrade())
+                .travelerGrade(user.getTravelerGrade())
+                .localGradeScore(user.getLocalGradeScore())
+                .travelerGradeScore(user.getTravelerGradeScore())
+                .build();
+    }
+
+
+
+
 }

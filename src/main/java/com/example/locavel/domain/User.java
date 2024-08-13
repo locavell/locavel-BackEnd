@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -53,7 +54,25 @@ public class User extends BaseEntity {
     private String phone_num;
 
     @Enumerated(EnumType.STRING)
-    private Grade grade;
+    private Grade localGrade = Grade.IRON;
+
+    @Enumerated(EnumType.STRING)
+    private Grade travelerGrade = Grade.IRON;
+
+
+    @PrePersist
+    public void prePersist() {
+        if (localGrade == null) {
+            localGrade = Grade.IRON; // 기본값 설정
+        }
+        if (travelerGrade == null) {
+            travelerGrade = Grade.IRON; // 기본값 설정
+        }
+    }
+
+
+    private int localGradeScore; // 로컬 등급 점수
+    private int travelerGradeScore; // 여행객 등급 점수
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -71,6 +90,8 @@ public class User extends BaseEntity {
     private LocalDateTime deleted_at;
 
     private LocalDateTime updated_at;
+
+    private int lastCalculatedMonths;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -102,4 +123,26 @@ public class User extends BaseEntity {
     public void setIntroduce(String introduce){this.introduce = introduce;}
 
     public void setPhone_num(String phone_num){this.phone_num = phone_num;}
+
+    public void setLocalGrade(Grade localGrade) {
+        this.localGrade = localGrade;
+    }
+
+
+    public void setLocalGradeScore(int localGradeScore) {
+        this.localGradeScore = localGradeScore;
+    }
+
+    public void setTravelerGradeScore(int travelerGradeScore) {
+        this.travelerGradeScore = travelerGradeScore;
+    }
+
+
+    public void setLastCalculatedMonths(int lastCalculatedMonths) {
+        this.lastCalculatedMonths = lastCalculatedMonths;
+    }
+
+    public void setTravelerGrade(Grade travelerGrade) {
+        this.travelerGrade = travelerGrade;
+    }
 }

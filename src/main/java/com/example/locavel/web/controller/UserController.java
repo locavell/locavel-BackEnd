@@ -13,9 +13,11 @@ import com.example.locavel.web.dto.TermDTO.TermResponseDTO;
 import com.example.locavel.web.dto.UserDTO.UserRequestDto;
 import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,4 +71,15 @@ public class UserController {
         List<TermAgreement> agree = termService.agree(termAgreeDTO);
         return ApiResponse.of(SuccessStatus.USER_TERM_AGREED, TermConverter.toTermAgreeResultDTO(agree));
     }
+
+    //유저 등급 조회
+    @Operation(summary = "유저 등급 조회", description = "유저의 등급을 조회합니다.")
+    @GetMapping("/api/users/{userId}/grade")
+    public ApiResponse<UserResponseDto.GradeResponseDto> getUserGrade(@PathVariable Long userId ){
+        User user = userCommandService.getUserGrade(userId);
+        UserResponseDto.GradeResponseDto response = userConverter.toGetUserGradeDTO(user);
+        return ApiResponse.of(SuccessStatus.GRADE_GET_OK, response);
+    }
+
+
 }

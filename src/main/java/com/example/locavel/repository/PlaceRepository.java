@@ -43,4 +43,5 @@ public interface PlaceRepository extends JpaRepository<Places, Long> {
     List<Places> searchByKeyword(@Param("keyword") String keyword);
 
 
+    int countByUser(User user);
 }

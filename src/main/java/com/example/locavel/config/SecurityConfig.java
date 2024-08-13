@@ -78,6 +78,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/reviews/**").permitAll()
                         //TODO : 장소 관련 api 일단 모두 허용, 추후 삭제
                         .requestMatchers("/api/places/**").permitAll()
+                        //TODO : 등급 관련 api 일단 모두 허용, 추후 삭제
+                        .requestMatchers("/api/users/{user_id}/grade").permitAll()
+                        .requestMatchers("/api/users/{user_id}/grade").permitAll()
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
