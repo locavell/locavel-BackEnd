@@ -5,15 +5,19 @@ import com.example.locavel.apiPayload.code.status.ErrorStatus;
 import com.example.locavel.apiPayload.exception.handler.PlacesHandler;
 import com.example.locavel.apiPayload.exception.handler.ReviewsHandler;
 import com.example.locavel.converter.PlaceConverter;
+import com.example.locavel.converter.ReviewConverter;
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.Reviews;
 import com.example.locavel.domain.User;
+import com.example.locavel.domain.enums.Traveler;
 import com.example.locavel.service.PlaceService;
 import com.example.locavel.service.ReviewService;
 import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -136,8 +140,38 @@ public class PlaceRestController {
         }
         return ApiResponse.of(SuccessStatus.PLACE_LIST_GET_OK, PlaceConverter.toSearchResultPlaceListDTO(places));
     }
+    @PostMapping("/api/places/{placeId}/wish-list")
+    @Operation(summary = "위시리스트 추가",description = "위시리스트에 place를 추가합니다.")
+    public ApiResponse addWish(HttpServletRequest httpServletRequest, @PathVariable Long placeId) {
+        User user = userCommandService.getUser(httpServletRequest);
+        placeService.addWishList(user, placeId);
+        return ApiResponse.of(SuccessStatus.WISHLIST_ADD_OK,null);
+    }
+    @DeleteMapping("/api/places/{placeId}/wish-list")
+    @Operation(summary = "위시리스트 삭제",description = "위시리스트에 저장된 place를 삭제합니다.")
+    public ApiResponse deleteWish(HttpServletRequest httpServletRequest, @PathVariable Long placeId) {
+        User user = userCommandService.getUser(httpServletRequest);
+        placeService.deleteWishList(user, placeId);
+        return ApiResponse.of(SuccessStatus.WISHLIST_DELETE_OK,null);
+    }
 
-
+    @GetMapping("/api/places/wish-list")
+    @Operation(summary = "위시리스트 조회",description = "위시리스트에 저장된 place를 조회합니다.")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호, 1번이 1 페이지"),
+            @Parameter(name = "category", description = "food/spot/activity 중 입력해주세요."),
+            @Parameter(name = "region", description = "my(내지역)/interest(관심지역)/etc(그외) 중 입력해주세요.")
+    })
+    public ApiResponse<PlaceResponseDTO.WishPlaceListDTO> getWishList(
+            HttpServletRequest httpServletRequest,
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(name = "category") String category,
+            @RequestParam(name = "region") String region) {
+        User user = userCommandService.getUser(httpServletRequest);
+        PlaceResponseDTO.WishPlaceListDTO response = placeService.getWishPlaceList(user, category, region,  page-1);
+        response.getWishPlaceDTOList().stream().map(wishPlaceDTO -> placeService.setPlaceImg(wishPlaceDTO)).collect(Collectors.toList());
+        return ApiResponse.of(SuccessStatus.WISHLIST_GET_OK,response);
+    }
 }
 
 // 지역명을 받고 해당 지역에 속하는
