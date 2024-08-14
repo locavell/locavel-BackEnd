@@ -9,6 +9,7 @@ import com.example.locavel.domain.Region;
 import com.example.locavel.domain.enums.Category;
 import com.example.locavel.repository.PlaceImgRepository;
 import com.example.locavel.repository.PlaceRepository;
+import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import jakarta.transaction.Transactional;
@@ -31,6 +32,8 @@ public class PlaceService {
     private final S3Uploader s3Uploader;
     private final WebClient webClient;
     private final RegionService regionService;
+    @Autowired
+    private UserCommandService userCommandService; //등급 업데이트를 위해 추가
 
     @Autowired
     public PlaceService(PlaceRepository placeRepository, PlaceImgRepository placeImgRepository, S3Uploader s3Uploader, WebClient.Builder webClientBuilder, RegionService regionService) {
@@ -48,30 +51,24 @@ public class PlaceService {
 
     public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
         MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
-        Places place = null;
-
         if (response == null) {
-            return place;
-        }else {
-            double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
-            double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
-            String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
+            throw new RuntimeException("Failed to get coordinates from address");
+        }
+        double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
+        double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
+        String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
+
+        if(placeRepository.findByAddress(roadAddress) != null){
+            throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
+        }
 
         Region region = regionService.findRegion(roadAddress);
         Places place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
 
-            if (placeRepository.findByAddress(roadAddress) != null) {
-                throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
-            }
-
-            Region region = Region.fromAddress(roadAddress);
-            place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
-
-            if (placeImgUrls != null && !placeImgUrls.isEmpty()) {
-                uploadPlaceImg(placeImgUrls, place, false);
-            }
-            return placeRepository.save(place);
+        if(placeImgUrls != null && !placeImgUrls.isEmpty()) {
+            uploadPlaceImg(placeImgUrls, place, false);
         }
+        return placeRepository.save(place);
 
     }
 

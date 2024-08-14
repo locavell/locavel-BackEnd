@@ -20,6 +20,9 @@ public enum SuccessStatus implements BaseCode {
     USER_DELETED(HttpStatus.OK,"USER2003", "유저가 정상적으로 삭제되었습니다."),
     USER_FOUND(HttpStatus.OK,"USER2005","유저를 정상적으로 조회했습니다."),
 
+    //유저 등급
+    GRADE_GET_OK(HttpStatus.OK, "GRADE2004", "유저 등급 조회를 정상적으로 조회했습니다."),
+
     //리뷰
     REVIEW_CREATE_OK(HttpStatus.OK,"REVIEW2001", "리뷰가 정상적으로 등록되었습니다."),
     REVIEW_UPDATE_OK(HttpStatus.OK,"REVIEW2002", "리뷰가 정상적으로 수정되었습니다."),

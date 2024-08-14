@@ -1,6 +1,7 @@
 package com.example.locavel.web.dto.UserDTO;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -18,4 +19,7 @@ public class UserRequestDto {
         private String introduce;
         private String phone_num;
     }
+
+
+
 }
