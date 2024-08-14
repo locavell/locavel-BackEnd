@@ -48,7 +48,6 @@ public class PlaceService {
 
     public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
         MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
-        System.out.println("fff");
         if (response == null) {
             throw new RuntimeException("Failed to get coordinates from address");
         }
