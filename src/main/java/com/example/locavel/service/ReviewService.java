@@ -32,6 +32,7 @@ public class ReviewService {
     private final PlaceRepository placeRepository;
     private final ReviewImgRepository reviewImgRepository;
     private final S3Uploader s3Uploader;
+    private final PlaceService placeService;
     public ReviewResponseDTO.ReviewResultDTO createReview(User user, Long placeId, ReviewRequestDTO.ReviewDTO request, List<MultipartFile> reviewImgUrls) {
         Places place = placeRepository.findById(placeId)
                 .orElseThrow(()->new ReviewsHandler(ErrorStatus.PLACE_NOT_FOUND));
@@ -41,28 +42,33 @@ public class ReviewService {
         if(reviewImgUrls != null && !reviewImgUrls.isEmpty()) {
             uploadReviewImg(reviewImgUrls, savedReview, false);
         }
+        placeService.setReview(place);
         return ReviewConverter.toReviewResultDTO(savedReview);
     }
 
     public ReviewResponseDTO.ReviewUpdateResultDTO updateReview(Long reviewId, ReviewRequestDTO.ReviewDTO request, List<MultipartFile> reviewImgUrls) {
         Reviews review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new ReviewsHandler(ErrorStatus.REVIEW_NOT_FOUND));
+        Places place = review.getPlace();
         if(request.getRating() != null) {review.setRating(request.getRating());}
         if(request.getComment() != null) {review.setComment(request.getComment());}
         if(reviewImgUrls != null) {uploadReviewImg(reviewImgUrls, review, true);}
         Reviews updatedReview = reviewRepository.save(review);
+        placeService.setReview(place);
         return ReviewConverter.toReviewUpdateResultDTO(updatedReview);
     }
 
     public ReviewResponseDTO.ReviewResultDTO deleteReview(Long reviewId) {
         Reviews review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new ReviewsHandler(ErrorStatus.REVIEW_NOT_FOUND));
+        Places place = review.getPlace();
         ReviewResponseDTO.ReviewResultDTO resultDTO = ReviewConverter.toReviewResultDTO(review);
         List<ReviewImg> reviewImgList = reviewImgRepository.findAllByReviews(review);
         for(ReviewImg imgUrl : reviewImgList) {
             s3Uploader.deleteFile(imgUrl.getImgUrl());
         }
         reviewRepository.delete(review);
+        placeService.setReview(place);
         return resultDTO;
     }
     public void uploadReviewImg(List<MultipartFile> reviewImg, Reviews reviews, boolean update) {
@@ -102,7 +108,6 @@ public class ReviewService {
     }
 
     public Page<Reviews> getMyReviewList(Long userId, Integer page) {
-        //TODO: JWT 토큰 추가 후 변경
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new RuntimeException("유저가 없습니다"));
         return reviewRepository.findAllByUser(user,PageRequest.of(page,10));
@@ -111,14 +116,7 @@ public class ReviewService {
     public ReviewResponseDTO.placeReviewSummaryDTO getPlaceReviewSummary(Long placeId) {
         Places place = placeRepository.findById(placeId)
                 .orElseThrow(()->new ReviewsHandler(ErrorStatus.PLACE_NOT_FOUND));
-        Float totalRating = reviewRepository.getAvgRatingByPlace(placeId);
-        Long totalCount = reviewRepository.countAllByPlace(place);
-        Float travelerRating = reviewRepository.getAvgRatingByPlaceAndTraveler(placeId, Traveler.YES);
-        Long travelerCount = reviewRepository.countAllByPlaceAndTraveler(place,Traveler.YES);
-        Float generalRating = reviewRepository.getAvgRatingByPlaceAndTraveler(placeId, Traveler.NO);
-        Long generalCount = reviewRepository.countAllByPlaceAndTraveler(place, Traveler.NO);
-
-        return ReviewConverter.toPlaceReviewSummaryDTO(totalRating, totalCount, generalRating, generalCount, travelerRating, travelerCount);
+        return ReviewConverter.toPlaceReviewSummaryDTO(place);
     }
 
     public ReviewResponseDTO.ReviewDetailDTO getReviewDetail(Long reviewId) {
@@ -137,5 +135,8 @@ public class ReviewService {
                 .flatMap(review -> review.getReviewImgList().stream())
                 .map(ReviewImg::getImgUrl)
                 .collect(Collectors.toList());
+    }
+    public void saveReview(Reviews review) {
+        reviewRepository.save(review);
     }
 }
