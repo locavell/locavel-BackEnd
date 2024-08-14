@@ -61,6 +61,9 @@ public class PlaceRestController {
         User user = userCommandService.getUser(httpServletRequest);
         Long userId = user.getId();
         userCommandService.updateLocalGrade(userId);
+        Reviews placeCreateReview = ReviewConverter.toReviews(user, Traveler.of(place,user),place,placeDTO.getRating());
+        reviewService.saveReview(placeCreateReview);
+        placeService.setReview(place);
         return ApiResponse.of(SuccessStatus.PLACE_CREATE_OK, PlaceConverter.toPlaceResultDTO(place));
     }
 
