@@ -54,4 +54,16 @@ public class Places extends BaseEntity {
 
     @OneToMany(mappedBy = "place")
     private List<Reviews> reviewList = new ArrayList<>();
+    @Builder.Default
+    private Float generalRating = 0f; //현지인 총점
+    @Builder.Default
+    private Float travelerRating = 0f; //여행객 총점
+    @Builder.Default
+    private Long reviewCount = 0L;
+    @Builder.Default
+    private Long generalReviewCount = 0L;
+    @Builder.Default
+    private Long travelerReviewCount = 0L;
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    private List<WishList> wishLists = new ArrayList<>();
 }
