@@ -46,6 +46,8 @@ public enum ErrorStatus implements BaseErrorCode {
     FOLLOWING_NOT_FOUND(HttpStatus.NOT_FOUND, "FOLLOW4001","팔로우 중이 아닙니다."),
     ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST,"FOLLOW4002","이미 팔로잉 중입니다."),
 
+    // 지역
+    REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION4001", "해당하는 지역이 존재하지 않습니다"),
 
     //약관 동의
     TERMS_NOT_FOUND(HttpStatus.NOT_FOUND, "TERM4001", "약관 동의가 존재하지 않습니다.");

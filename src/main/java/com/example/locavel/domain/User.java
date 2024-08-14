@@ -6,6 +6,7 @@ import com.example.locavel.domain.enums.Grade;
 import com.example.locavel.domain.enums.Role;
 import com.example.locavel.domain.enums.SocialType;
 import com.example.locavel.domain.mapping.TermAgreement;
+import com.example.locavel.domain.mapping.UserRegion;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -103,6 +104,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Follow> followList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRegion> userRegionList = new ArrayList<>();
+
     //유저 권한 GUEST -> USER 로
     public void authorizeUser(){
         this.access = Access.USER;
@@ -130,6 +134,13 @@ public class User extends BaseEntity {
 
     public void setPhone_num(String phone_num){this.phone_num = phone_num;}
 
+
+    // 관심 지역 추가 메서드
+    public void addUserRegionList(UserRegion userRegion) {
+        userRegionList.add(userRegion);
+    }
+
+
     public void setLocalGrade(Grade localGrade) {
         this.localGrade = localGrade;
     }
@@ -151,8 +162,10 @@ public class User extends BaseEntity {
     public void setTravelerGrade(Grade travelerGrade) {
         this.travelerGrade = travelerGrade;
     }
+
     public void setFollowingCountPlus(){this.followingCount++;}
     public void setFollowerCountPlus(){this.followerCount++;}
     public void setFollowingCountMinus(){this.followingCount--;}
     public void setFollowerCountMinus(){this.followerCount--;}
+
 }

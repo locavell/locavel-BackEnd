@@ -2,10 +2,10 @@ package com.example.locavel.converter;
 
 import com.example.locavel.domain.PlaceImg;
 import com.example.locavel.domain.Places;
+import com.example.locavel.domain.Region;
 import com.example.locavel.domain.Reviews;
 import com.example.locavel.domain.ReviewImg;
 import com.example.locavel.domain.enums.Category;
-import com.example.locavel.domain.enums.Region;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 
@@ -19,7 +19,7 @@ public class PlaceConverter {
         return PlaceResponseDTO.PlaceDetailDTO.builder()
                 .name(places.getName())
                 .placeId(places.getId())
-                .address(places.getRegion().getAddress())   // 수정 필요
+                .address(places.getAddress())   // 수정 필요
                 .generalRating(places.getRating())
                 .longitude(places.getLongitude())
                 .latitude(places.getLatitude())
@@ -51,7 +51,7 @@ public class PlaceConverter {
                 break;
         }
 
-        return Places.builder()
+        Places places = Places.builder()
                 .name(request.getName())
                 .category(category)
                 .rating(request.getRating())
@@ -61,6 +61,8 @@ public class PlaceConverter {
                 .latitude(latitude)
                 .longitude(longitude)
                 .build();
+//        places.setRegion(region);
+        return places;
     }
 
     public static PlaceImg toPlaceImg(Places places, String url){
