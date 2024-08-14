@@ -2,7 +2,6 @@ package com.example.locavel.web.dto.PlaceDTO;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -97,6 +96,30 @@ public class PlaceResponseDTO {
         int reviewCount;
         List<String> reviewImgList;
     }
-
-
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class WishPlaceListDTO {
+        List<WishPlaceDTO> wishPlaceDTOList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Setter
+    public static class WishPlaceDTO {
+        Long placeId;
+        String name;
+        String placeImg;
+        String description;
+        Float totalRating; // 리뷰 총점
+        Float generalRating; // 현지인 리뷰 총점
+        Float travelerRating; // 여행객 리뷰 총점
+    }
 }

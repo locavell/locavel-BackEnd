@@ -1,13 +1,10 @@
 package com.example.locavel.converter;
 
-import com.example.locavel.domain.PlaceImg;
-import com.example.locavel.domain.Places;
-import com.example.locavel.domain.Region;
-import com.example.locavel.domain.Reviews;
-import com.example.locavel.domain.ReviewImg;
+import com.example.locavel.domain.*;
 import com.example.locavel.domain.enums.Category;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -159,5 +156,34 @@ public class PlaceConverter {
         return placesList.stream()
                 .map(PlaceConverter::toSearchResultPlaceDTO)
                 .collect(Collectors.toList());
+    }
+    public static WishList toWishList(User user, Places place) {
+        return WishList.builder()
+                .user(user)
+                .place(place)
+                .build();
+    }
+    public static PlaceResponseDTO.WishPlaceDTO toWishPlaceDTO(Places place) {
+        return PlaceResponseDTO.WishPlaceDTO.builder()
+                .description(place.getDescription())
+                .totalRating(place.getRating())
+                .generalRating(place.getGeneralRating())
+                .travelerRating(place.getTravelerRating())
+                .name(place.getName())
+                .placeId(place.getId())
+                .build();
+    }
+
+    public static PlaceResponseDTO.WishPlaceListDTO toWishPlaceListDTO(Page<Places> placeList) {
+        List<PlaceResponseDTO.WishPlaceDTO> wishPlaceDTOList = placeList.stream()
+                .map(PlaceConverter::toWishPlaceDTO).collect(Collectors.toList());
+        return PlaceResponseDTO.WishPlaceListDTO.builder()
+                .wishPlaceDTOList(wishPlaceDTOList)
+                .listSize(placeList.getSize())
+                .isLast(placeList.isLast())
+                .isFirst(placeList.isFirst())
+                .totalPage(placeList.getTotalPages())
+                .totalElements(placeList.getTotalElements())
+                .build();
     }
 }

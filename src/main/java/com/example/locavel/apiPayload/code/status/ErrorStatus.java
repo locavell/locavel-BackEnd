@@ -49,6 +49,11 @@ public enum ErrorStatus implements BaseErrorCode {
     // 지역
     REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION4001", "해당하는 지역이 존재하지 않습니다"),
 
+    //위시리스트
+    WISHLIST_ALREADY_ADDED(HttpStatus.BAD_REQUEST,"WISHLIST4001","이미 위시리스트에 저장되어있습니다."),
+    WISHLIST_NOT_FOUND(HttpStatus.NOT_FOUND,"WISHLIST4002","위시리스트에 저장되어 있지 않습니다."),
+
+
     //약관 동의
     TERMS_NOT_FOUND(HttpStatus.NOT_FOUND, "TERM4001", "약관 동의가 존재하지 않습니다.");
 

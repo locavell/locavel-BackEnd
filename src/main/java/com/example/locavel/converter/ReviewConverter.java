@@ -35,6 +35,15 @@ public class ReviewConverter {
                 .rating(request.getRating())
                 .build();
     }
+    public static Reviews toReviews(User user, Traveler traveler, Places place, Float rating) {
+        return Reviews.builder()
+                .comment(null)
+                .user(user)
+                .traveler(traveler)
+                .place(place)
+                .rating(rating)
+                .build();
+    }
     public static ReviewImg toReviewImg(Reviews reviews, String url) {
         return ReviewImg.builder()
                 .reviews(reviews)
@@ -110,20 +119,14 @@ public class ReviewConverter {
                 .build();
     }
 
-    public static ReviewResponseDTO.placeReviewSummaryDTO toPlaceReviewSummaryDTO(
-            Float totalRating,
-            Long totalReviewCount,
-            Float generalRating,
-            Long generalReviewCount,
-            Float travelerRating,
-            Long travelerReviewCount) {
+    public static ReviewResponseDTO.placeReviewSummaryDTO toPlaceReviewSummaryDTO(Places place) {
         return ReviewResponseDTO.placeReviewSummaryDTO.builder()
-                .totalRating(totalRating)
-                .totalReviewCount(totalReviewCount)
-                .generalRating(generalRating)
-                .generalReviewCount(generalReviewCount)
-                .travelerRating(travelerRating)
-                .travelerReviewCount(travelerReviewCount)
+                .totalRating(place.getRating())
+                .totalReviewCount(place.getReviewCount())
+                .generalRating(place.getGeneralRating())
+                .generalReviewCount(place.getGeneralReviewCount())
+                .travelerRating(place.getTravelerRating())
+                .travelerReviewCount(place.getTravelerReviewCount())
                 .build();
     }
 
@@ -147,7 +150,6 @@ public class ReviewConverter {
                 .reviewerFollowerCount(user.getFollowerCount())
                 .build();
     }
-
     private final ReviewImgRepository reviewImgRepository;
     public List<String> getAllReviewImgUrls(Reviews review) {
         List<ReviewImg> reviewImgList = reviewImgRepository.findAllByReviews(review);

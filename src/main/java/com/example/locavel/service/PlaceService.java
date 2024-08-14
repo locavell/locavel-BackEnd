@@ -3,18 +3,19 @@ package com.example.locavel.service;
 import com.example.locavel.apiPayload.code.status.ErrorStatus;
 import com.example.locavel.apiPayload.exception.handler.PlacesHandler;
 import com.example.locavel.converter.PlaceConverter;
-import com.example.locavel.domain.PlaceImg;
-import com.example.locavel.domain.Places;
-import com.example.locavel.domain.Region;
+import com.example.locavel.domain.*;
 import com.example.locavel.domain.enums.Category;
-import com.example.locavel.repository.PlaceImgRepository;
-import com.example.locavel.repository.PlaceRepository;
+import com.example.locavel.domain.enums.Traveler;
+import com.example.locavel.repository.*;
 import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.MapDTO.MapResponseDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
+import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,16 +33,22 @@ public class PlaceService {
     private final S3Uploader s3Uploader;
     private final WebClient webClient;
     private final RegionService regionService;
+    private final WishListRepository wishListRepository;
+    private final ReviewRepository reviewRepository;
+    private final UserRegionRepository userRegionRepository;
     @Autowired
     private UserCommandService userCommandService; //등급 업데이트를 위해 추가
 
     @Autowired
-    public PlaceService(PlaceRepository placeRepository, PlaceImgRepository placeImgRepository, S3Uploader s3Uploader, WebClient.Builder webClientBuilder, RegionService regionService) {
+    public PlaceService(PlaceRepository placeRepository, PlaceImgRepository placeImgRepository, S3Uploader s3Uploader, WebClient.Builder webClientBuilder, RegionService regionService, WishListRepository wishListRepository, ReviewRepository reviewRepository, UserRegionRepository userRegionRepository) {
         this.placeRepository = placeRepository;
         this.placeImgRepository = placeImgRepository;
         this.s3Uploader = s3Uploader;
         this.webClient = webClientBuilder.build();
         this.regionService = regionService;
+        this.wishListRepository = wishListRepository;
+        this.reviewRepository = reviewRepository;
+        this.userRegionRepository = userRegionRepository;
     }
 
 
@@ -57,7 +64,6 @@ public class PlaceService {
         double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
         double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
         String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
-
         if(placeRepository.findByAddress(roadAddress) != null){
             throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
         }
@@ -127,5 +133,73 @@ public class PlaceService {
 
     public List<Places> searchPlaces(String keyword) {
         return placeRepository.searchByKeyword(keyword);
+    }
+    public void addWishList(User user, Long placeId) {
+        Places place = placeRepository.findById(placeId)
+                .orElseThrow(()->new PlacesHandler(ErrorStatus.PLACE_NOT_FOUND));
+        WishList wishListCheck = wishListRepository.findByUserAndPlace(user,place);
+        if(wishListCheck == null) {
+            WishList wishList = PlaceConverter.toWishList(user, place);
+            wishListRepository.save(wishList);
+        }
+        else {
+            throw new PlacesHandler(ErrorStatus.WISHLIST_ALREADY_ADDED);
+        }
+    }
+    public void deleteWishList(User user, Long placeId) {
+        Places place = placeRepository.findById(placeId)
+                .orElseThrow(()->new PlacesHandler(ErrorStatus.PLACE_NOT_FOUND));
+        WishList wishList = wishListRepository.findByUserAndPlace(user,place);
+        if(wishList != null) {
+            wishListRepository.delete(wishList);
+        }
+        else {
+            throw new PlacesHandler(ErrorStatus.WISHLIST_NOT_FOUND);
+        }
+    }
+    public PlaceResponseDTO.WishPlaceListDTO getWishPlaceList(User user, String category, String region, Integer page) {
+        Page<Places> wishPlaceList = null;
+        Category cat = Category.valueOf(category.toLowerCase());
+        Region userRegion = regionService.findRegion(user.getLocation());
+        List<Long> interestRegionIdList = userRegionRepository.findUserRegionIdByUser(user);
+        Long regionId = userRegion.getId();
+        if(region.equals("my")) {
+            wishPlaceList = wishListRepository.findAllPlacesByUserAndCategoryInUserRegion(user, cat, regionId, PageRequest.of(page,10));
+        }
+        else if(region.equals("interest")) {
+            wishPlaceList = wishListRepository.findAllPlacesByUserAndCategoryInInterest(user, cat, interestRegionIdList, PageRequest.of(page,10));
+        }
+        else if(region.equals("etc")) {
+            wishPlaceList = wishListRepository.findAllPlacesByUserAndCategoryInEct(user, cat,  regionId, interestRegionIdList, PageRequest.of(page, 10));
+        }
+        return PlaceConverter.toWishPlaceListDTO(wishPlaceList);
+    }
+    public void setReview(Places place) { //리뷰정보 업데이트
+        Long placeId = place.getId();
+        Float totalRating;
+        Float travelerRating;
+        Float generalRating;
+        Long totalCount = reviewRepository.countAllByPlace(place);
+        if(totalCount > 0L) {totalRating = reviewRepository.getAvgRatingByPlace(placeId);}
+        else {totalRating = 0f;}
+        Long travelerCount = reviewRepository.countAllByPlaceAndTraveler(place, Traveler.YES);
+        if(travelerCount > 0L) {travelerRating = reviewRepository.getAvgRatingByPlaceAndTraveler(placeId, Traveler.YES);}
+        else {travelerRating = 0f;}
+        Long generalCount = reviewRepository.countAllByPlaceAndTraveler(place, Traveler.NO);
+        if(generalCount > 0L) {generalRating = reviewRepository.getAvgRatingByPlaceAndTraveler(placeId, Traveler.NO);}
+        else {generalRating = 0f;}
+        place.setRating(totalRating);
+        place.setReviewCount(totalCount);
+        place.setTravelerRating(travelerRating);
+        place.setTravelerReviewCount(travelerCount);
+        place.setGeneralRating(generalRating);
+        place.setGeneralReviewCount(generalCount);
+    }
+    public PlaceResponseDTO.WishPlaceDTO setPlaceImg(PlaceResponseDTO.WishPlaceDTO wishPlaceDTO){
+        Places place = placeRepository.findById(wishPlaceDTO.getPlaceId())
+                .orElseThrow(()->new PlacesHandler(ErrorStatus.PLACE_NOT_FOUND));
+        String imgUrl = placeImgRepository.findPlaceImgByPlaces(place);
+        wishPlaceDTO.setPlaceImg(imgUrl);
+        return wishPlaceDTO;
     }
 }

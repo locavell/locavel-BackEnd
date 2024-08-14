@@ -1,5 +1,6 @@
 package com.example.locavel.web.dto.FollowDTO;
 
+import com.example.locavel.domain.enums.Grade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,9 +29,8 @@ public class FollowResponseDTO {
         Long userId;
         String profile;
         String nickname;
-        //TODO : 등급 기능 추가 후 등급 추가
-//        Grade generalGrade;
-//        Grade travelerGrade;
+        Grade localGrade;
+        Grade travelerGrade;
 
     }
 }

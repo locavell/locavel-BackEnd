@@ -41,6 +41,11 @@ public enum SuccessStatus implements BaseCode {
     FOLLOW_OK(HttpStatus.OK, "FOLLOW2001", "팔로우가 완료되었습니다."),
     FOLLOW_DELETE_OK(HttpStatus.OK,"FOLLOW2002","팔로우 취소가 완료되었습니다."),
     FOLLOW_GET_OK(HttpStatus.OK,"FOLLOW2003","팔로우 목록을 조회했습니다."),
+
+    //위시리스트
+    WISHLIST_ADD_OK(HttpStatus.OK,"WISHLIST2001","위시리스트에 저장되었습니다."),
+    WISHLIST_DELETE_OK(HttpStatus.OK,"WISHLIST2002","위시리스트에서 삭제되었습니다."),
+    WISHLIST_GET_OK(HttpStatus.OK,"WISHLIST2003","위시리스트를 조회했습니다."),
     ;
 
     private final HttpStatus httpStatus;

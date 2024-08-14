@@ -20,7 +20,8 @@ public class FollowConverter {
                 .nickname(user.getNickname())
                 .profile(user.getProfileImage())
                 .userId(user.getId())
-                //TODO:등급추가
+                .localGrade(user.getLocalGrade())
+                .travelerGrade(user.getTravelerGrade())
                 .build();
     }
 
