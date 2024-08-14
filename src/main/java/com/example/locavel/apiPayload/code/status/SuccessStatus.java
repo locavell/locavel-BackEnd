@@ -27,6 +27,17 @@ public enum SuccessStatus implements BaseCode {
     REVIEW_GET_OK(HttpStatus.OK,"REVIEW2004","리뷰 목록을 조회했습니다."),
     REVIEW_SUMMARY_GET_OK(HttpStatus.OK,"REVIEW2005", "리뷰 요약을 조회했습니다."),
     REVIEW_DETAIL_GET_OK(HttpStatus.OK,"REVIEW2006", "리뷰를 상세조회했습니다."),
+
+    // 장소
+    PLACE_CREATE_OK(HttpStatus.OK, "PLACE2001", "장소가 정상적으로 등록되었습니다."),
+    PLACE_GET_OK(HttpStatus.OK, "PLACE2004", "장소를 조회했습니다."),
+    PLACE_LIST_GET_OK(HttpStatus.OK, "PLACE2004", "장소 목록을 조회했습니다."),
+    PLACE_MARKER_GET_OK(HttpStatus.OK, "PLACE2004", "장소 마커 정보를 조회했습니다."),
+
+    //팔로우
+    FOLLOW_OK(HttpStatus.OK, "FOLLOW2001", "팔로우가 완료되었습니다."),
+    FOLLOW_DELETE_OK(HttpStatus.OK,"FOLLOW2002","팔로우 취소가 완료되었습니다."),
+    FOLLOW_GET_OK(HttpStatus.OK,"FOLLOW2003","팔로우 목록을 조회했습니다."),
     ;
 
     private final HttpStatus httpStatus;

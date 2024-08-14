@@ -4,6 +4,7 @@ import com.example.locavel.domain.PlaceImg;
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.Region;
 import com.example.locavel.domain.Reviews;
+import com.example.locavel.domain.ReviewImg;
 import com.example.locavel.domain.enums.Category;
 import com.example.locavel.web.dto.PlaceDTO.PlaceRequestDTO;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class PlaceConverter {
 
-    public static PlaceResponseDTO.PlaceDetailDTO toPlaceDetailDTO(Places places) {
+    public static PlaceResponseDTO.PlaceDetailDTO toPlaceDetailDTO(Places places, List<String> reviewImgList) {
         return PlaceResponseDTO.PlaceDetailDTO.builder()
                 .name(places.getName())
                 .placeId(places.getId())
@@ -22,6 +23,7 @@ public class PlaceConverter {
                 .generalRating(places.getRating())
                 .longitude(places.getLongitude())
                 .latitude(places.getLatitude())
+                .reviewImgList(reviewImgList)
 //                .travelerRating()
                 .build();
     }
@@ -126,5 +128,36 @@ public class PlaceConverter {
                 .filterPlaceDTOList(filterPlaceDTOList)
                 .category(places.get(0).getCategory().toString())
                 .build();
+    }
+
+    public static List<PlaceResponseDTO.FilterPlaceDTO> toRecommendPlace(List<Places> places, List<List<Reviews>> reviewsLists, List<List<String>> reviewImgLists) {
+        return places.stream()
+                .map(place -> toFilterPlaceDTO(
+                        place,
+                        reviewsLists.get(places.indexOf(place)),
+                        reviewImgLists.get(places.indexOf(place))
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public static PlaceResponseDTO.SearchResultPlaceDTO toSearchResultPlaceDTO(Places place) {
+        List<String> reviewImgList = place.getReviewList().stream()
+                .flatMap(review -> review.getReviewImgList().stream())
+                .map(ReviewImg::getImgUrl)
+                .collect(Collectors.toList());
+
+        return PlaceResponseDTO.SearchResultPlaceDTO.builder()
+                .placeId(place.getId())
+                .name(place.getName())
+                .rating(place.getRating())
+                .reviewCount(place.getReviewList().size())
+                .reviewImgList(reviewImgList)
+                .build();
+    }
+
+    public static List<PlaceResponseDTO.SearchResultPlaceDTO> toSearchResultPlaceListDTO(List<Places> placesList) {
+        return placesList.stream()
+                .map(PlaceConverter::toSearchResultPlaceDTO)
+                .collect(Collectors.toList());
     }
 }

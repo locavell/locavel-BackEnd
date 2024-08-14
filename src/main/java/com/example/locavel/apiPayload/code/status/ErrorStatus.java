@@ -32,6 +32,7 @@ public enum ErrorStatus implements BaseErrorCode {
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PLACE4001", "장소가 없습니다."),
     PLACE_NOT_EXIST(HttpStatus.BAD_REQUEST, "PLACE4002", "장소명은 필수입니다."),
     PLACE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "PLACE4003", "이미 등록된 장소입니다."),
+    ADDRESS_NOT_VALID(HttpStatus.BAD_REQUEST, "PLACE4003", "주소가 올바르지 않습니다."),
 
     //페이지
     PAGE_NOT_VALID(HttpStatus.BAD_REQUEST,"PAGE4001", "페이지는 1 이상이어야 합니다."),
@@ -39,6 +40,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //유저
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001","해당 유저가 존재하지 않습니다."),
+    USER_SAME(HttpStatus.BAD_REQUEST,"USER4002","본인입니다."),
+
+    //팔로우
+    FOLLOWING_NOT_FOUND(HttpStatus.NOT_FOUND, "FOLLOW4001","팔로우 중이 아닙니다."),
+    ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST,"FOLLOW4002","이미 팔로잉 중입니다."),
 
     // 지역
     REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "REGION4001", "해당하는 지역이 존재하지 않습니다"),

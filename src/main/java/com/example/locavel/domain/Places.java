@@ -5,7 +5,6 @@ import com.example.locavel.domain.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,4 +51,7 @@ public class Places extends BaseEntity {
         this.region = region;
         region.addPlaces(this);
     }
+
+    @OneToMany(mappedBy = "place")
+    private List<Reviews> reviewList = new ArrayList<>();
 }

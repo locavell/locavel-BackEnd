@@ -72,10 +72,16 @@ public class User extends BaseEntity {
     private LocalDateTime deleted_at;
 
     private LocalDateTime updated_at;
+    @Builder.Default
+    private Integer followingCount = 0;
+    @Builder.Default
+    private Integer followerCount = 0;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TermAgreement> termAgreementList = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Follow> followList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRegion> userRegionList = new ArrayList<>();
@@ -111,4 +117,10 @@ public class User extends BaseEntity {
     public void addUserRegionList(UserRegion userRegion) {
         userRegionList.add(userRegion);
     }
+
+    public void setFollowingCountPlus(){this.followingCount++;}
+    public void setFollowerCountPlus(){this.followerCount++;}
+    public void setFollowingCountMinus(){this.followingCount--;}
+    public void setFollowerCountMinus(){this.followerCount--;}
+
 }

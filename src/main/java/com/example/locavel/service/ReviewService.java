@@ -32,10 +32,7 @@ public class ReviewService {
     private final PlaceRepository placeRepository;
     private final ReviewImgRepository reviewImgRepository;
     private final S3Uploader s3Uploader;
-    public ReviewResponseDTO.ReviewResultDTO createReview(Long placeId, ReviewRequestDTO.RevieweDTO request, List<MultipartFile> reviewImgUrls) {
-        //TODO : JWT 토큰 추가 후 변경
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(()->new RuntimeException("해당하는 유저가 없습니다."));
+    public ReviewResponseDTO.ReviewResultDTO createReview(User user, Long placeId, ReviewRequestDTO.ReviewDTO request, List<MultipartFile> reviewImgUrls) {
         Places place = placeRepository.findById(placeId)
                 .orElseThrow(()->new ReviewsHandler(ErrorStatus.PLACE_NOT_FOUND));
         Traveler traveler = Traveler.of(place, user);
@@ -47,7 +44,7 @@ public class ReviewService {
         return ReviewConverter.toReviewResultDTO(savedReview);
     }
 
-    public ReviewResponseDTO.ReviewUpdateResultDTO updateReview(Long reviewId, ReviewRequestDTO.RevieweDTO request, List<MultipartFile> reviewImgUrls) {
+    public ReviewResponseDTO.ReviewUpdateResultDTO updateReview(Long reviewId, ReviewRequestDTO.ReviewDTO request, List<MultipartFile> reviewImgUrls) {
         Reviews review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new ReviewsHandler(ErrorStatus.REVIEW_NOT_FOUND));
         if(request.getRating() != null) {review.setRating(request.getRating());}

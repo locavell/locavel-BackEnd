@@ -26,7 +26,7 @@ public class ReviewConverter {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
-    public static Reviews toReviews(User user, Traveler traveler, Places place, ReviewRequestDTO.RevieweDTO request) {
+    public static Reviews toReviews(User user, Traveler traveler, Places place, ReviewRequestDTO.ReviewDTO request) {
         return Reviews.builder()
                 .comment(request.getComment())
                 .user(user)
@@ -60,6 +60,7 @@ public class ReviewConverter {
                 .comment(review.getComment())
                 .createdAt(review.getCreated_at())
                 .updatedAt(review.getUpdated_at())
+                .reviewerFollowerCount(user.getFollowerCount())
                 .build();
     }
     public ReviewResponseDTO.ReviewPreviewListDTO toReviewPreviewListDTO(Page<Reviews> reviewList) {
@@ -143,6 +144,7 @@ public class ReviewConverter {
                 .createdAt(review.getCreated_at())
                 .placeName(place.getName())
                 .comment(review.getComment())
+                .reviewerFollowerCount(user.getFollowerCount())
                 .build();
     }
 

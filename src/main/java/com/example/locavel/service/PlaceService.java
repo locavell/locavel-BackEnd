@@ -48,24 +48,31 @@ public class PlaceService {
 
     public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
         MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
-        if (response == null) {
-            throw new RuntimeException("Failed to get coordinates from address");
-        }
-        double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
-        double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
-        String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
+        Places place = null;
 
-        if(placeRepository.findByAddress(roadAddress) != null){
-            throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
-        }
+        if (response == null) {
+            return place;
+        }else {
+            double longitude = Double.parseDouble(response.getAddresses().get(0).getX());
+            double latitude = Double.parseDouble(response.getAddresses().get(0).getY());
+            String roadAddress = response.getAddresses().get(0).getRoadAddress(); // 도로명주소 가져오기
 
         Region region = regionService.findRegion(roadAddress);
         Places place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
 
-        if(placeImgUrls != null && !placeImgUrls.isEmpty()) {
-            uploadPlaceImg(placeImgUrls, place, false);
+            if (placeRepository.findByAddress(roadAddress) != null) {
+                throw new PlacesHandler(ErrorStatus.PLACE_ALREADY_EXIST);
+            }
+
+            Region region = Region.fromAddress(roadAddress);
+            place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
+
+            if (placeImgUrls != null && !placeImgUrls.isEmpty()) {
+                uploadPlaceImg(placeImgUrls, place, false);
+            }
+            return placeRepository.save(place);
         }
-        return placeRepository.save(place);
+
     }
 
     private Mono<MapResponseDTO> getCoordinatesFromAddress(String address) {
@@ -81,13 +88,13 @@ public class PlaceService {
                 })
                 .map(response -> {
                     if (response == null) {
-                        throw new RuntimeException("API response is null");
+                        throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);
                     }
                     if (!"OK".equals(response.getStatus())) {
-                        throw new RuntimeException("API response status is not OK: " + response.getStatus() + " - " + response.getErrorMessage());
+                        throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);
                     }
                     if (response.getAddresses() == null || response.getAddresses().isEmpty()) {
-                        throw new RuntimeException("No addresses found in API response");
+                        throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);
                     }
                     return response;
                 });
@@ -117,17 +124,11 @@ public class PlaceService {
         return placeRepository.findByCategory(cat);
     }
 
-//    public PlaceResponseDTO.FilterPlaceListDTO getFilterPlaceListDTO(String category) {
-//        List<Places> places = getFilterPlaces(category);
-//        return placeConverter.toFilterPlaceListDTO(places, reviewService);
-//    }
+    public List<Places> recommendNearbyPlaces(double latitude, double longitude, double radius) {
+        return placeRepository.findNearbyPlaces(latitude, longitude, radius);
+    }
 
-//    public Page<Places> getPlaceList(Region region, Integer page) {
-//
-//        Places place = placeRepository.findById(StoreId).get();
-//
-//        Page<Places> placePage = placeRepository.findAllByPlace(place, PageRequest.of(page, 10));
-//        return placePage;
-//
-//    }
+    public List<Places> searchPlaces(String keyword) {
+        return placeRepository.searchByKeyword(keyword);
+    }
 }
