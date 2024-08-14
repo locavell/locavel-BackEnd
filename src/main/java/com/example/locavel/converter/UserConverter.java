@@ -1,6 +1,7 @@
 package com.example.locavel.converter;
 
 import com.example.locavel.domain.User;
+import com.example.locavel.web.dto.UserDTO.UserRequestDto;
 import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,8 @@ public class UserConverter {
                 .username(user.getUsername())
                 .nickname(user.getNickname())
                 .socialType(user.getSocialType())
-                .grade(user.getGrade())
+                .localGrade(user.getLocalGrade())
+                .travelerGrade(user.getTravelerGrade())
                 .role(user.getRole())
                 .created_at(user.getCreated_at())
                 .updated_at(user.getUpdated_at())
@@ -48,4 +50,19 @@ public class UserConverter {
                 .updated_at(LocalDateTime.now())
                 .build();
     }
+
+    //회원 등급 조회하기
+    public  UserResponseDto.GradeResponseDto toGetUserGradeDTO(User user){
+        return UserResponseDto.GradeResponseDto.builder()
+                .userId(user.getId())
+                .localGrade(user.getLocalGrade())
+                .travelerGrade(user.getTravelerGrade())
+                .build();
+    }
+
+
+
+
+
+
 }

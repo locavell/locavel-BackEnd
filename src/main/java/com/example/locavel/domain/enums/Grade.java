@@ -1,9 +1,10 @@
 package com.example.locavel.domain.enums;
 
 public enum Grade {
+    IRON,
     BRONZE,
     SILVER,
     GOLD,
-    PLATINUM,
-    DIAMOND
+    DIAMOND,
+    VIP
 }
