@@ -94,6 +94,8 @@ public class User extends BaseEntity {
     private Integer followingCount = 0;
     @Builder.Default
     private Integer followerCount = 0;
+    @Builder.Default
+    private Integer reviewCount = 0;
 
     private int lastCalculatedMonths;
 
@@ -168,5 +170,7 @@ public class User extends BaseEntity {
     public void setFollowerCountPlus(){this.followerCount++;}
     public void setFollowingCountMinus(){this.followingCount--;}
     public void setFollowerCountMinus(){this.followerCount--;}
+    public void setReviewCountPlus(){this.reviewCount++;}
+    public void setReviewCountMinus(){this.reviewCount--;}
 
 }

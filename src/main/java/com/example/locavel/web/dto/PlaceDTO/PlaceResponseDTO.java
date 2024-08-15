@@ -100,8 +100,8 @@ public class PlaceResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class WishPlaceListDTO {
-        List<WishPlaceDTO> wishPlaceDTOList;
+    public static class PlacePreviewListDTO {
+        List<PlacePreviewDTO> PlacePreviewDTOList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;
@@ -113,7 +113,7 @@ public class PlaceResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Setter
-    public static class WishPlaceDTO {
+    public static class PlacePreviewDTO {
         Long placeId;
         String name;
         String placeImg;

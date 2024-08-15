@@ -162,14 +162,14 @@ public class PlaceRestController {
             @Parameter(name = "category", description = "food/spot/activity 중 입력해주세요."),
             @Parameter(name = "region", description = "my(내지역)/interest(관심지역)/etc(그외) 중 입력해주세요.")
     })
-    public ApiResponse<PlaceResponseDTO.WishPlaceListDTO> getWishList(
+    public ApiResponse<PlaceResponseDTO.PlacePreviewListDTO> getWishList(
             HttpServletRequest httpServletRequest,
             @RequestParam(name = "page") Integer page,
             @RequestParam(name = "category") String category,
             @RequestParam(name = "region") String region) {
         User user = userCommandService.getUser(httpServletRequest);
-        PlaceResponseDTO.WishPlaceListDTO response = placeService.getWishPlaceList(user, category, region,  page-1);
-        response.getWishPlaceDTOList().stream().map(wishPlaceDTO -> placeService.setPlaceImg(wishPlaceDTO)).collect(Collectors.toList());
+        PlaceResponseDTO.PlacePreviewListDTO response = placeService.getWishPlaceList(user, category, region,  page-1);
+        response.getPlacePreviewDTOList().stream().map(placePreviewDTO -> placeService.setPlaceImg(placePreviewDTO)).collect(Collectors.toList());
         return ApiResponse.of(SuccessStatus.WISHLIST_GET_OK,response);
     }
 }
