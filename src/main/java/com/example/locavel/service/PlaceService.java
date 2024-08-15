@@ -157,7 +157,7 @@ public class PlaceService {
             throw new PlacesHandler(ErrorStatus.WISHLIST_NOT_FOUND);
         }
     }
-    public PlaceResponseDTO.WishPlaceListDTO getWishPlaceList(User user, String category, String region, Integer page) {
+    public PlaceResponseDTO.PlacePreviewListDTO getWishPlaceList(User user, String category, String region, Integer page) {
         Page<Places> wishPlaceList = null;
         Category cat = Category.valueOf(category.toLowerCase());
         Region userRegion = regionService.findRegion(user.getLocation());
@@ -195,7 +195,7 @@ public class PlaceService {
         place.setGeneralRating(generalRating);
         place.setGeneralReviewCount(generalCount);
     }
-    public PlaceResponseDTO.WishPlaceDTO setPlaceImg(PlaceResponseDTO.WishPlaceDTO wishPlaceDTO){
+    public PlaceResponseDTO.PlacePreviewDTO setPlaceImg(PlaceResponseDTO.PlacePreviewDTO wishPlaceDTO){
         Places place = placeRepository.findById(wishPlaceDTO.getPlaceId())
                 .orElseThrow(()->new PlacesHandler(ErrorStatus.PLACE_NOT_FOUND));
         String imgUrl = placeImgRepository.findPlaceImgByPlaces(place);
