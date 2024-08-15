@@ -204,18 +204,29 @@ public class UserCommandServiceImpl implements UserCommandService{
             }
     }
 
+//    @Override
+//    public User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress) {
+//        String email = httpServletRequest.getUserPrincipal().getName();
+//        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+//
+//        // 도로명 주소에서 구 이름만 뺴오기
+//        Pattern pattern = Pattern.compile("\\b[가-힣]+구\\b");
+//        Matcher matcher = pattern.matcher(roadNameAddress);
+//        String distinct = matcher.group();
+//
+//        Region region = regionRepository.findByName(distinct);
+//        user.setMy_area(region);
+//        return user;
+//    }
+
     @Override
-    public User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress) {
+    @Transactional
+    public User setMyArea(HttpServletRequest httpServletRequest, String distinct) {
         String email = httpServletRequest.getUserPrincipal().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
-
-        // 도로명 주소에서 구 이름만 뺴오기
-        Pattern pattern = Pattern.compile("\\b[가-힣]+구\\b");
-        Matcher matcher = pattern.matcher(roadNameAddress);
-        String distinct = matcher.group();
-
         Region region = regionRepository.findByName(distinct);
         user.setMy_area(region);
+        userRepository.save(user);
         return user;
     }
 }

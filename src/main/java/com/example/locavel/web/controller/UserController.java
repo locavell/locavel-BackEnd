@@ -102,8 +102,9 @@ public class UserController {
     @Operation(summary = "내 지역 등록", description = "내 지역을 등록합니다. 쿼리 스트링으로 위도, 경도 값을 주세요")
     @PostMapping("/api/users/my-area")
     public ApiResponse<UserResponseDto.MyAreaResponseDto> setUserArea(HttpServletRequest httpServletRequest, @RequestParam double latitude, @RequestParam double longitude) {
-        String roadNameAddress = naverMapService.getRoadNameAddress(latitude, longitude);
-        User user = userCommandService.setMyArea(httpServletRequest, roadNameAddress);
+        // 위도 경도 정보를 통해 속한 구 이름 가져오기
+        String distinct = naverMapService.getRoadNameAddress(latitude, longitude);
+        User user = userCommandService.setMyArea(httpServletRequest, distinct);
         UserResponseDto.MyAreaResponseDto responseDto = userConverter.myAreaResponseDto(user);
         return ApiResponse.onSuccess(responseDto);
     }
@@ -111,8 +112,8 @@ public class UserController {
     @Operation(summary = "내 지역 변경", description = "내 지역을 변경합니다. 쿼리 스트링으로 위도, 경도 값을 주세요")
     @PatchMapping("/api/users/my-area")
     public ApiResponse<UserResponseDto.MyAreaResponseDto> updateUserArea(HttpServletRequest httpServletRequest, @RequestParam double latitude, @RequestParam double longitude) {
-        String roadNameAddress = naverMapService.getRoadNameAddress(latitude, longitude);
-        User user = userCommandService.setMyArea(httpServletRequest, roadNameAddress);
+        String distinct = naverMapService.getRoadNameAddress(latitude, longitude);
+        User user = userCommandService.setMyArea(httpServletRequest, distinct);
         UserResponseDto.MyAreaResponseDto responseDto = userConverter.myAreaResponseDto(user);
         return ApiResponse.onSuccess(responseDto);
     }
@@ -134,6 +135,7 @@ public class UserController {
                         .build()).collect(Collectors.toList());
         return ApiResponse.onSuccess(collect);
     }
+
     @Operation(summary = "유저 방문한 곳 조회", description = "마이페이지에서 유저가 방문한 장소 목록을 조회합니다.")
     @GetMapping("/api/users/mypage/places")
     public ApiResponse<PlaceResponseDTO.PlacePreviewListDTO> getUserVisit(HttpServletRequest httpServletRequest, @RequestParam(name="page")Integer page) {

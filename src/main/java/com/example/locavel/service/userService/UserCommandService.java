@@ -29,5 +29,6 @@ public interface UserCommandService {
 
     Grade calculateLocalGrade(int score);
 
+    //User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress);
     User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress);
 }

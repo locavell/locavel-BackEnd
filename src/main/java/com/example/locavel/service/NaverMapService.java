@@ -13,21 +13,22 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class NaverMapService {
-    @Value("${naver.api.url}")
+    @Value("https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc")
     private String apiUrl;
 
-    @Value("${naver.api.client-id}")
+    @Value("mdk50annar")
     private String clientId;
 
-    @Value("${naver.api.client-secret}")
+    @Value("nw1x5b1mNpas7lSf9sdwF7e9xuL350bHTuAonX5R")
     private String clientSecret;
 
     public String getRoadNameAddress(double latitude, double longitude) {
         RestTemplate restTemplate = new RestTemplate();
-
+        System.out.println(latitude);
+        System.out.println(longitude);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .queryParam("coords", longitude + "," + latitude)
-                .queryParam("orders", "roadaddr")  // 도로명 주소를 우선적으로 요청
+                .queryParam("coords", longitude + "," + latitude)  // 좌표 순서 확인
+                .queryParam("orders", "roadaddr")  // 도로명 주소를 요청
                 .queryParam("output", "json");
 
         HttpHeaders headers = new HttpHeaders();
@@ -44,7 +45,6 @@ public class NaverMapService {
                 entity,
                 String.class
         );
-
         return parseAddressFromResponse(response.getBody());
     }
 
@@ -54,7 +54,7 @@ public class NaverMapService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode root = objectMapper.readTree(responseBody);
-            JsonNode addressNode = root.path("results").path(0).path("region").path("area1").path("name");
+            JsonNode addressNode = root.path("results").path(0).path("region").path("area2").path("name");
             return addressNode.asText();
         } catch (Exception e) {
             e.printStackTrace();
