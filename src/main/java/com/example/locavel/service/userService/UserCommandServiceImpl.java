@@ -2,11 +2,13 @@ package com.example.locavel.service.userService;
 
 import com.example.locavel.apiPayload.code.status.ErrorStatus;
 import com.example.locavel.converter.UserConverter;
+import com.example.locavel.domain.Region;
 import com.example.locavel.domain.User;
 import com.example.locavel.domain.enums.Access;
 import com.example.locavel.apiPayload.exception.handler.UserHandler;
 import com.example.locavel.domain.enums.Grade;
 import com.example.locavel.repository.PlaceRepository;
+import com.example.locavel.repository.RegionRepository;
 import com.example.locavel.repository.ReviewRepository;
 import com.example.locavel.repository.UserRepository;
 import com.example.locavel.service.jwtService.JwtService;
@@ -26,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -37,6 +41,7 @@ public class UserCommandServiceImpl implements UserCommandService{
     private final ReviewRepository reviewRepository;
     private final JwtService jwtService;
     private final PlaceRepository placeRepository;
+    private final RegionRepository regionRepository;
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception{
 
@@ -197,7 +202,20 @@ public class UserCommandServiceImpl implements UserCommandService{
             else {
                 return Grade.VIP;
             }
-        }
     }
 
+    @Override
+    public User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress) {
+        String email = httpServletRequest.getUserPrincipal().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
+        // 도로명 주소에서 구 이름만 뺴오기
+        Pattern pattern = Pattern.compile("\\b[가-힣]+구\\b");
+        Matcher matcher = pattern.matcher(roadNameAddress);
+        String distinct = matcher.group();
+
+        Region region = regionRepository.findByName(distinct);
+        user.setMy_area(region);
+        return user;
+    }
+}

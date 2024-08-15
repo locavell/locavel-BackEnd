@@ -60,9 +60,12 @@ public class UserConverter {
                 .build();
     }
 
-
-
-
-
+    public UserResponseDto.MyAreaResponseDto myAreaResponseDto(User user) {
+        return UserResponseDto.MyAreaResponseDto.builder()
+                .userId(user.getId())
+                .regionId(user.getMy_area().getId())
+                .regionName(user.getMy_area().getName())
+                .build();
+    }
 
 }

@@ -71,4 +71,14 @@ public class UserResponseDto {
         private Grade travelerGrade;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyAreaResponseDto {
+        private Long userId;
+        private Long regionId;
+        private String regionName;
+    }
+
 }

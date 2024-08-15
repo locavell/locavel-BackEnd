@@ -28,4 +28,6 @@ public interface UserCommandService {
     User calculateTravelerGradeScore(Long userId, ReviewRequestDTO.ReviewDTO request);
 
     Grade calculateLocalGrade(int score);
+
+    User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress);
 }
