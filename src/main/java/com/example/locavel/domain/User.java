@@ -59,6 +59,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Grade travelerGrade = Grade.IRON;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "region_id")
+    private Region my_area;
+
 
     @PrePersist
     public void prePersist() {
@@ -172,5 +176,9 @@ public class User extends BaseEntity {
     public void setFollowerCountMinus(){this.followerCount--;}
     public void setReviewCountPlus(){this.reviewCount++;}
     public void setReviewCountMinus(){this.reviewCount--;}
+
+    public void setMy_area(Region region) {
+        this.my_area = region;
+    }
 
 }

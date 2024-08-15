@@ -87,6 +87,16 @@ public class UserResponseDto {
         private String introduce;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyAreaResponseDto {
+        private Long userId;
+        private Long regionId;
+        private String regionName;
+    }
+
     @Builder
     @Getter
     @NoArgsConstructor
@@ -94,4 +104,5 @@ public class UserResponseDto {
     public static class VisitCalendarDTO {
         List<LocalDate> visitDayList;
     }
+
 }

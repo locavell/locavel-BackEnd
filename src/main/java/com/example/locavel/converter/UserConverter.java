@@ -62,6 +62,15 @@ public class UserConverter {
                 .build();
     }
 
+
+    public UserResponseDto.MyAreaResponseDto myAreaResponseDto(User user) {
+        return UserResponseDto.MyAreaResponseDto.builder()
+                .userId(user.getId())
+                .regionId(user.getMy_area().getId())
+                .regionName(user.getMy_area().getName())
+                .build();
+    }
+
     public UserResponseDto.UserProfileDTO toUserProfileDTO(User user){
         return UserResponseDto.UserProfileDTO.builder()
                 .userId(user.getId())

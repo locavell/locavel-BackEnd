@@ -4,8 +4,10 @@ import com.example.locavel.apiPayload.ApiResponse;
 import com.example.locavel.apiPayload.code.status.SuccessStatus;
 import com.example.locavel.converter.TermConverter;
 import com.example.locavel.converter.UserConverter;
+import com.example.locavel.domain.Places;
 import com.example.locavel.domain.User;
 import com.example.locavel.domain.mapping.TermAgreement;
+import com.example.locavel.service.NaverMapService;
 import com.example.locavel.service.PlaceService;
 import com.example.locavel.service.ReviewService;
 import com.example.locavel.service.termService.TermService;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,8 +35,10 @@ public class UserController {
     private final UserCommandService userCommandService;
     private final TermService termService;
     private final UserConverter userConverter;
+    private final NaverMapService naverMapService;
     private final PlaceService placeService;
     private final ReviewService reviewService;
+
 
     @PostMapping("/api/auth/sign-up")
     public String signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception{
@@ -93,11 +98,47 @@ public class UserController {
         return ApiResponse.of(SuccessStatus.MYPAGE_PROFILE_GET_OK,response);
     }
 
+    // 내 지역 관련
+    @Operation(summary = "내 지역 등록", description = "내 지역을 등록합니다. 쿼리 스트링으로 위도, 경도 값을 주세요")
+    @PostMapping("/api/users/my-area")
+    public ApiResponse<UserResponseDto.MyAreaResponseDto> setUserArea(HttpServletRequest httpServletRequest, @RequestParam double latitude, @RequestParam double longitude) {
+        // 위도 경도 정보를 통해 속한 구 이름 가져오기
+        String distinct = naverMapService.getRoadNameAddress(latitude, longitude);
+        User user = userCommandService.setMyArea(httpServletRequest, distinct);
+        UserResponseDto.MyAreaResponseDto responseDto = userConverter.myAreaResponseDto(user);
+        return ApiResponse.onSuccess(responseDto);
+    }
+
+    @Operation(summary = "내 지역 변경", description = "내 지역을 변경합니다. 쿼리 스트링으로 위도, 경도 값을 주세요")
+    @PatchMapping("/api/users/my-area")
+    public ApiResponse<UserResponseDto.MyAreaResponseDto> updateUserArea(HttpServletRequest httpServletRequest, @RequestParam double latitude, @RequestParam double longitude) {
+        String distinct = naverMapService.getRoadNameAddress(latitude, longitude);
+        User user = userCommandService.setMyArea(httpServletRequest, distinct);
+        UserResponseDto.MyAreaResponseDto responseDto = userConverter.myAreaResponseDto(user);
+        return ApiResponse.onSuccess(responseDto);
+    }
+
+    @Operation(summary = "내 지역에 속한 장소 조회", description = "내 지역에 속한 장소를 조회합니다.")
+    @GetMapping("/api/users/my-area/places")
+    public ApiResponse<List<PlaceResponseDTO.PlaceDetailDTO>> getPlaces(HttpServletRequest httpServletRequest) {
+        User user = userCommandService.getUser(httpServletRequest);
+        List<Places> placesList = user.getMy_area().getPlacesList();
+        List<PlaceResponseDTO.PlaceDetailDTO> collect = placesList.stream().map(places ->
+                PlaceResponseDTO.PlaceDetailDTO.builder()
+                        .name(places.getName())
+                        .placeId(places.getId())
+                        .address(places.getAddress())   // 수정 필요
+                        .generalRating(places.getRating())
+                        .longitude(places.getLongitude())
+                        .latitude(places.getLatitude())
+                        //              .travelerRating()
+                        .build()).collect(Collectors.toList());
+        return ApiResponse.onSuccess(collect);
+    }
+
     @Operation(summary = "유저 방문한 곳 조회", description = "마이페이지에서 유저가 방문한 장소 목록을 조회합니다.")
     @GetMapping("/api/users/mypage/places")
-    public ApiResponse<PlaceResponseDTO.PlacePreviewListDTO> getUserVisit(
-            HttpServletRequest httpServletRequest,
-            @RequestParam(name="page")Integer page) {
+    public ApiResponse<PlaceResponseDTO.PlacePreviewListDTO> getUserVisit(HttpServletRequest httpServletRequest, @RequestParam(name="page")Integer page) {
         User user = userCommandService.getUser(httpServletRequest);
         PlaceResponseDTO.PlacePreviewListDTO response = placeService.getUserVisitPlaceList(user, page-1);
         return ApiResponse.of(SuccessStatus.MYPAGE_VISIT_GET_OK,response);
@@ -118,5 +159,6 @@ public class UserController {
         User user = userCommandService.getUser(httpServletRequest);
         UserResponseDto.VisitCalendarDTO response = reviewService.getVisitDayList(user, year, month, category);
         return ApiResponse.of(SuccessStatus.MYPATE_CALENDAR_GET_OK,response);
+
     }
 }
