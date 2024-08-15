@@ -3,10 +3,12 @@ package com.example.locavel.service;
 import com.example.locavel.apiPayload.code.status.ErrorStatus;
 import com.example.locavel.apiPayload.exception.handler.ReviewsHandler;
 import com.example.locavel.converter.ReviewConverter;
+import com.example.locavel.converter.UserConverter;
 import com.example.locavel.domain.Places;
 import com.example.locavel.domain.ReviewImg;
 import com.example.locavel.domain.Reviews;
 import com.example.locavel.domain.User;
+import com.example.locavel.domain.enums.Category;
 import com.example.locavel.domain.enums.Traveler;
 import com.example.locavel.repository.PlaceRepository;
 import com.example.locavel.repository.ReviewImgRepository;
@@ -14,6 +16,7 @@ import com.example.locavel.repository.ReviewRepository;
 import com.example.locavel.repository.UserRepository;
 import com.example.locavel.web.dto.ReviewDTO.ReviewRequestDTO;
 import com.example.locavel.web.dto.ReviewDTO.ReviewResponseDTO;
+import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +24,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +49,8 @@ public class ReviewService {
             uploadReviewImg(reviewImgUrls, savedReview, false);
         }
         placeService.setReview(place);
+        user.setReviewCountPlus();
+        userRepository.save(user);
         return ReviewConverter.toReviewResultDTO(savedReview);
     }
 
@@ -64,11 +72,14 @@ public class ReviewService {
         Places place = review.getPlace();
         ReviewResponseDTO.ReviewResultDTO resultDTO = ReviewConverter.toReviewResultDTO(review);
         List<ReviewImg> reviewImgList = reviewImgRepository.findAllByReviews(review);
+        User user = review.getUser();
         for(ReviewImg imgUrl : reviewImgList) {
             s3Uploader.deleteFile(imgUrl.getImgUrl());
         }
         reviewRepository.delete(review);
         placeService.setReview(place);
+        user.setReviewCountMinus();
+        userRepository.save(user);
         return resultDTO;
     }
     public void uploadReviewImg(List<MultipartFile> reviewImg, Reviews reviews, boolean update) {
