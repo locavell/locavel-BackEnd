@@ -163,8 +163,8 @@ public class PlaceConverter {
                 .place(place)
                 .build();
     }
-    public static PlaceResponseDTO.WishPlaceDTO toWishPlaceDTO(Places place) {
-        return PlaceResponseDTO.WishPlaceDTO.builder()
+    public static PlaceResponseDTO.PlacePreviewDTO toPlacePreviewDTO(Places place) {
+        return PlaceResponseDTO.PlacePreviewDTO.builder()
                 .description(place.getDescription())
                 .totalRating(place.getRating())
                 .generalRating(place.getGeneralRating())
@@ -174,11 +174,11 @@ public class PlaceConverter {
                 .build();
     }
 
-    public static PlaceResponseDTO.WishPlaceListDTO toWishPlaceListDTO(Page<Places> placeList) {
-        List<PlaceResponseDTO.WishPlaceDTO> wishPlaceDTOList = placeList.stream()
-                .map(PlaceConverter::toWishPlaceDTO).collect(Collectors.toList());
-        return PlaceResponseDTO.WishPlaceListDTO.builder()
-                .wishPlaceDTOList(wishPlaceDTOList)
+    public static PlaceResponseDTO.PlacePreviewListDTO toPlacePreviewListDTO(Page<Places> placeList) {
+        List<PlaceResponseDTO.PlacePreviewDTO> placePreviewDTOList = placeList.stream()
+                .map(PlaceConverter::toPlacePreviewDTO).collect(Collectors.toList());
+        return PlaceResponseDTO.PlacePreviewListDTO.builder()
+                .PlacePreviewDTOList(placePreviewDTOList)
                 .listSize(placeList.getSize())
                 .isLast(placeList.isLast())
                 .isFirst(placeList.isFirst())

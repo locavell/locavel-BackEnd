@@ -4,9 +4,10 @@ import com.example.locavel.domain.enums.Grade;
 import com.example.locavel.domain.enums.Role;
 import com.example.locavel.domain.enums.SocialType;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UserResponseDto {
 
@@ -70,6 +71,21 @@ public class UserResponseDto {
         private Grade localGrade;
         private Grade travelerGrade;
     }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserProfileDTO {
+        private Long userId;
+        private String nickname;
+        private Grade localGrade;
+        private Grade travelerGrade;
+        private String imgUrl;
+        private Integer reviewCount;
+        private Integer follower;
+        private Integer following;
+        private String introduce;
+    }
 
     @Getter
     @Builder
@@ -79,6 +95,14 @@ public class UserResponseDto {
         private Long userId;
         private Long regionId;
         private String regionName;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class VisitCalendarDTO {
+        List<LocalDate> visitDayList;
     }
 
 }

@@ -8,6 +8,8 @@ import com.example.locavel.domain.Places;
 import com.example.locavel.domain.User;
 import com.example.locavel.domain.mapping.TermAgreement;
 import com.example.locavel.service.NaverMapService;
+import com.example.locavel.service.PlaceService;
+import com.example.locavel.service.ReviewService;
 import com.example.locavel.service.termService.TermService;
 import com.example.locavel.service.userService.UserCommandService;
 import com.example.locavel.web.dto.PlaceDTO.PlaceResponseDTO;
@@ -17,10 +19,10 @@ import com.example.locavel.web.dto.UserDTO.UserRequestDto;
 import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import com.example.locavel.web.dto.UserDTO.UserSignUpDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +36,9 @@ public class UserController {
     private final TermService termService;
     private final UserConverter userConverter;
     private final NaverMapService naverMapService;
+    private final PlaceService placeService;
+    private final ReviewService reviewService;
+
 
     @PostMapping("/api/auth/sign-up")
     public String signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception{
@@ -85,6 +90,13 @@ public class UserController {
         UserResponseDto.GradeResponseDto response = userConverter.toGetUserGradeDTO(user);
         return ApiResponse.of(SuccessStatus.GRADE_GET_OK, response);
     }
+    @Operation(summary = "유저 프로필 조회", description = "마이페이지에서 유저의 프로필을 조회합니다.")
+    @GetMapping("/api/users/mypage/profile")
+    public ApiResponse<UserResponseDto.UserProfileDTO> getUserProfile(HttpServletRequest httpServletRequest) {
+        User user = userCommandService.getUser(httpServletRequest);
+        UserResponseDto.UserProfileDTO response = userConverter.toUserProfileDTO(user);
+        return ApiResponse.of(SuccessStatus.MYPAGE_PROFILE_GET_OK,response);
+    }
 
     // 내 지역 관련
     @Operation(summary = "내 지역 등록", description = "내 지역을 등록합니다. 쿼리 스트링으로 위도, 경도 값을 주세요")
@@ -121,5 +133,30 @@ public class UserController {
                         //              .travelerRating()
                         .build()).collect(Collectors.toList());
         return ApiResponse.onSuccess(collect);
+    }
+    @Operation(summary = "유저 방문한 곳 조회", description = "마이페이지에서 유저가 방문한 장소 목록을 조회합니다.")
+    @GetMapping("/api/users/mypage/places")
+    public ApiResponse<PlaceResponseDTO.PlacePreviewListDTO> getUserVisit(HttpServletRequest httpServletRequest, @RequestParam(name="page")Integer page) {
+        User user = userCommandService.getUser(httpServletRequest);
+        PlaceResponseDTO.PlacePreviewListDTO response = placeService.getUserVisitPlaceList(user, page-1);
+        return ApiResponse.of(SuccessStatus.MYPAGE_VISIT_GET_OK,response);
+    }
+
+    @Operation(summary = "유저 방문 기록 날짜별 조회", description = "마이페이지에서 유저가 방문한 장소가 있는 날짜를 달력으로 조회합니다.")
+    @GetMapping("/api/users/mypage/calendar")
+    @Parameters({
+            @Parameter(name = "year", description = "조회할 연도, 입력하지 않으면 오늘날짜의 연도로 설정됩니다."),
+            @Parameter(name = "month", description = "조회할 달, 입력하지 않으면 오늘날짜의 달로 설정됩니다."),
+            @Parameter(name = "category", description = "food/spot/activity 중 입력, 입력하지 않으면 전체 조회입니다.")
+    })
+    public ApiResponse<UserResponseDto.VisitCalendarDTO> getUserVisitCalendar(
+            HttpServletRequest httpServletRequest,
+            @RequestParam(name="year", required = false)Integer year,
+            @RequestParam(name="month", required = false)Integer month,
+            @RequestParam(name="category", required = false)String category) {
+        User user = userCommandService.getUser(httpServletRequest);
+        UserResponseDto.VisitCalendarDTO response = reviewService.getVisitDayList(user, year, month, category);
+        return ApiResponse.of(SuccessStatus.MYPATE_CALENDAR_GET_OK,response);
+
     }
 }

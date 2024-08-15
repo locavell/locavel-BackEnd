@@ -1,11 +1,13 @@
 package com.example.locavel.converter;
 
 import com.example.locavel.domain.User;
-import com.example.locavel.web.dto.UserDTO.UserRequestDto;
 import com.example.locavel.web.dto.UserDTO.UserResponseDto;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UserConverter {
@@ -60,6 +62,7 @@ public class UserConverter {
                 .build();
     }
 
+
     public UserResponseDto.MyAreaResponseDto myAreaResponseDto(User user) {
         return UserResponseDto.MyAreaResponseDto.builder()
                 .userId(user.getId())
@@ -68,4 +71,26 @@ public class UserConverter {
                 .build();
     }
 
+    public UserResponseDto.UserProfileDTO toUserProfileDTO(User user){
+        return UserResponseDto.UserProfileDTO.builder()
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .follower(user.getFollowerCount())
+                .following(user.getFollowingCount())
+                .travelerGrade(user.getTravelerGrade())
+                .localGrade(user.getLocalGrade())
+                .imgUrl(user.getProfileImage())
+                .reviewCount(user.getReviewCount())
+                .introduce(user.getIntroduce())
+                .build();
+    }
+    public static UserResponseDto.VisitCalendarDTO toVisitCalendarDTO(List<LocalDateTime> reviewDayList) {
+        List<LocalDate> dayList = reviewDayList.stream()
+                .map(LocalDateTime::toLocalDate)
+                .distinct()
+                .collect(Collectors.toList());
+        return UserResponseDto.VisitCalendarDTO.builder()
+                .visitDayList(dayList)
+                .build();
+    }
 }

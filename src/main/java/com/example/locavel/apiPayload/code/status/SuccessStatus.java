@@ -46,6 +46,11 @@ public enum SuccessStatus implements BaseCode {
     WISHLIST_ADD_OK(HttpStatus.OK,"WISHLIST2001","위시리스트에 저장되었습니다."),
     WISHLIST_DELETE_OK(HttpStatus.OK,"WISHLIST2002","위시리스트에서 삭제되었습니다."),
     WISHLIST_GET_OK(HttpStatus.OK,"WISHLIST2003","위시리스트를 조회했습니다."),
+
+    //마이페이지
+    MYPAGE_PROFILE_GET_OK(HttpStatus.OK,"MYPAGE2001","유저 프로필을 조회했습니다."),
+    MYPAGE_VISIT_GET_OK(HttpStatus.OK,"MYPAGE2002","유저가 방문한 곳을 조회했습니다."),
+    MYPATE_CALENDAR_GET_OK(HttpStatus.OK,"MYPAGE2003","유저가 방문한 날짜를 조회했습니다"),
     ;
 
     private final HttpStatus httpStatus;
