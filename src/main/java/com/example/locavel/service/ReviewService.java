@@ -139,4 +139,20 @@ public class ReviewService {
     public void saveReview(Reviews review) {
         reviewRepository.save(review);
     }
+    public UserResponseDto.VisitCalendarDTO getVisitDayList(User user, Integer year, Integer month, String category) {
+        if (year == null) {year = LocalDate.now().getYear();}
+        if (month == null) {month = LocalDate.now().getMonthValue();}
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDateTime start = LocalDateTime.of(year,month,1,0,0);
+        LocalDateTime end = LocalDateTime.of(year,month, yearMonth.lengthOfMonth(), 23,59,59);
+        List<LocalDateTime> dayList = null;
+        if(category == null){
+            dayList = reviewRepository.findAllCreatedAtByDate(user, start, end);
+        }
+        else {
+            Category cat = Category.valueOf(category);
+            dayList = reviewRepository.findAllCreatedAtByDateAndCategory(user, start, end, cat);
+        }
+        return UserConverter.toVisitCalendarDTO(dayList);
+    }
 }

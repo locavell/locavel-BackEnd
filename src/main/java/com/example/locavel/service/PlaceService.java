@@ -36,11 +36,20 @@ public class PlaceService {
     private final WishListRepository wishListRepository;
     private final ReviewRepository reviewRepository;
     private final UserRegionRepository userRegionRepository;
+    private final UserRepository userRepository;
     @Autowired
     private UserCommandService userCommandService; //등급 업데이트를 위해 추가
 
     @Autowired
-    public PlaceService(PlaceRepository placeRepository, PlaceImgRepository placeImgRepository, S3Uploader s3Uploader, WebClient.Builder webClientBuilder, RegionService regionService, WishListRepository wishListRepository, ReviewRepository reviewRepository, UserRegionRepository userRegionRepository) {
+    public PlaceService(PlaceRepository placeRepository,
+                        PlaceImgRepository placeImgRepository,
+                        S3Uploader s3Uploader,
+                        WebClient.Builder webClientBuilder,
+                        RegionService regionService,
+                        WishListRepository wishListRepository,
+                        ReviewRepository reviewRepository,
+                        UserRegionRepository userRegionRepository,
+                        UserRepository userRepository) {
         this.placeRepository = placeRepository;
         this.placeImgRepository = placeImgRepository;
         this.s3Uploader = s3Uploader;
@@ -49,6 +58,7 @@ public class PlaceService {
         this.wishListRepository = wishListRepository;
         this.reviewRepository = reviewRepository;
         this.userRegionRepository = userRegionRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -74,6 +84,9 @@ public class PlaceService {
         if(placeImgUrls != null && !placeImgUrls.isEmpty()) {
             uploadPlaceImg(placeImgUrls, place, false);
         }
+        User user = place.getUser();
+        user.setReviewCountPlus();
+        userRepository.save(user);
         return placeRepository.save(place);
 
     }
@@ -172,7 +185,11 @@ public class PlaceService {
         else if(region.equals("etc")) {
             wishPlaceList = wishListRepository.findAllPlacesByUserAndCategoryInEct(user, cat,  regionId, interestRegionIdList, PageRequest.of(page, 10));
         }
-        return PlaceConverter.toWishPlaceListDTO(wishPlaceList);
+        return PlaceConverter.toPlacePreviewListDTO(wishPlaceList);
+    }
+    public PlaceResponseDTO.PlacePreviewListDTO getUserVisitPlaceList(User user, Integer page) {
+        Page<Places> visitPlaceList = reviewRepository.findAllPlaceByUser(user,PageRequest.of(page,10));
+        return PlaceConverter.toPlacePreviewListDTO(visitPlaceList);
     }
     public void setReview(Places place) { //리뷰정보 업데이트
         Long placeId = place.getId();
