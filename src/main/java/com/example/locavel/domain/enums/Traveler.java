@@ -15,14 +15,12 @@ public enum Traveler {
 
     // 유저의 현지인/여행객 판단
     public static Traveler of(Places place, User user) {
-        String location = user.getLocation();
-        String placeAddress = place.getAddress();
-        System.out.println("location = " + location);
-        System.out.println("placeAddress = " + placeAddress);
-        if (placeAddress.contains(location)) {
-            return NO;
+        Long userRegion = user.getMy_area().getId();
+        Long placeRegion = place.getRegion().getId();
+        if (userRegion == placeRegion || userRegion.equals(placeRegion)) {
+            return NO; // 현지인
         }
-        else return YES;
+        else return YES; //여행객
     }
     @JsonValue
     public String getViewName() {
