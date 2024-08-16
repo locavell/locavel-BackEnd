@@ -43,7 +43,6 @@ public class NaverMapService {
                 entity,
                 String.class
         );
-        System.out.println("API response: " + response);
         return parseAddressFromResponse(response.getBody());
     }
 
