@@ -60,9 +60,9 @@ public class PlaceRestController {
         if(placeDTO.getRating() > 5 || placeDTO.getRating() <0) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_VALID);
         }
-        Places place = placeService.createPlace(placeDTO, placeImgUrls);
-        if(place == null) {throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);}
         User user = userCommandService.getUser(httpServletRequest);
+        Places place = placeService.createPlace(placeDTO, placeImgUrls, user);
+        if(place == null) {throw new PlacesHandler(ErrorStatus.ADDRESS_NOT_VALID);}
         Long userId = user.getId();
         userCommandService.updateLocalGrade(userId);
         Reviews placeCreateReview = ReviewConverter.toReviews(user, Traveler.of(place,user),place,placeDTO.getRating());

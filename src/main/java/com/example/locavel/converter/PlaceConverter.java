@@ -34,7 +34,7 @@ public class PlaceConverter {
 
     public static Places toPlace(PlaceRequestDTO.PlaceDTO request,
                                  Double latitude, Double longitude,
-                                 String roadAddress, Region region){
+                                 String roadAddress, Region region, User user){
         Category category = null;
         switch (request.getCategory()){
             case "spot":
@@ -49,6 +49,7 @@ public class PlaceConverter {
         }
 
         Places places = Places.builder()
+                .user(user)
                 .name(request.getName())
                 .category(category)
                 .rating(request.getRating())

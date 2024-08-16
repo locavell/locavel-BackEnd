@@ -66,7 +66,7 @@ public class PlaceService {
         return placeRepository.findById(id);
     }
 
-    public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls) {
+    public Places createPlace(PlaceRequestDTO.PlaceDTO placeDTO, List<MultipartFile> placeImgUrls, User user) {
         MapResponseDTO response = getCoordinatesFromAddress(placeDTO.getAddress()).block();
         if (response == null) {
             throw new RuntimeException("Failed to get coordinates from address");
@@ -79,12 +79,11 @@ public class PlaceService {
         }
 
         Region region = regionService.findRegion(roadAddress);
-        Places place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region);
+        Places place = PlaceConverter.toPlace(placeDTO, latitude, longitude, roadAddress, region, user);
 
         if(placeImgUrls != null && !placeImgUrls.isEmpty()) {
             uploadPlaceImg(placeImgUrls, place, false);
         }
-        User user = place.getUser();
         user.setReviewCountPlus();
         userRepository.save(user);
         return placeRepository.save(place);
