@@ -24,8 +24,6 @@ public class NaverMapService {
 
     public String getRoadNameAddress(double latitude, double longitude) {
         RestTemplate restTemplate = new RestTemplate();
-        System.out.println(latitude);
-        System.out.println(longitude);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .queryParam("coords", longitude + "," + latitude)  // 좌표 순서 확인
                 .queryParam("orders", "roadaddr")  // 도로명 주소를 요청
