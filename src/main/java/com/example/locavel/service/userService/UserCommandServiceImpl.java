@@ -228,4 +228,14 @@ public class UserCommandServiceImpl implements UserCommandService{
         userRepository.save(user);
         return user;
     }
+
+    @Override
+    public UserResponseDto.MyAreaResponseDto getMyArea(HttpServletRequest httpServletRequest) {
+        User user = getUser(httpServletRequest);
+        return UserResponseDto.MyAreaResponseDto.builder()
+                .userId(user.getId())
+                .regionId(user.getMy_area().getId())
+                .regionName(user.getMy_area().getName())
+                .build();
+    }
 }

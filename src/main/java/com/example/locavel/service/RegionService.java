@@ -27,11 +27,12 @@ public class RegionService {
 
     public static String extractDistrict(String address) {
         // 서울특별시 주소에서 구를 추출하는 정규 표현식
-        Pattern pattern = Pattern.compile("\\b[가-힣]+구\\b");
+        Pattern pattern = Pattern.compile("서울특별시\\s*[가-힣]+구");
         Matcher matcher = pattern.matcher(address);
 
         // 첫 번째 일치 항목 반환
         if (matcher.find()) {
+            System.out.println(matcher.group());
             return matcher.group();
         } else {
             return "없음";
