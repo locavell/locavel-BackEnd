@@ -15,79 +15,79 @@ public class MakeInitData {
     public CommandLineRunner loadRegionData(RegionRepository regionRepository) {
         return args -> {
             Region region1 = Region.builder()
-                    .name("강남구")
+                    .name("서울특별시 강남구")
                     .build();
             Region region2 = Region.builder()
-                    .name("강동구")
+                    .name("서울특별시 강동구")
                     .build();
             Region region3 = Region.builder()
-                    .name("강북구")
+                    .name("서울특별시 강북구")
                     .build();
             Region region4 = Region.builder()
-                    .name("강서구")
+                    .name("서울특별시 강서구")
                     .build();
             Region region5 = Region.builder()
-                    .name("관악구")
+                    .name("서울특별시 관악구")
                     .build();
             Region region6 = Region.builder()
-                    .name("광진구")
+                    .name("서울특별시 광진구")
                     .build();
             Region region7 = Region.builder()
-                    .name("구로구")
+                    .name("서울특별시 구로구")
                     .build();
             Region region8 = Region.builder()
-                    .name("금천구")
+                    .name("서울특별시 금천구")
                     .build();
             Region region9 = Region.builder()
-                    .name("노원구")
+                    .name("서울특별시 노원구")
                     .build();
             Region region10 = Region.builder()
-                    .name("도봉구")
+                    .name("서울특별시 도봉구")
                     .build();
             Region region11 = Region.builder()
-                    .name("동대문구")
+                    .name("서울특별시 동대문구")
                     .build();
             Region region12 = Region.builder()
-                    .name("동작구")
+                    .name("서울특별시 동작구")
                     .build();
             Region region13 = Region.builder()
-                    .name("마포구")
+                    .name("서울특별시 마포구")
                     .build();
             Region region14 = Region.builder()
-                    .name("서대문구")
+                    .name("서울특별시 서대문구")
                     .build();
             Region region15 = Region.builder()
-                    .name("서초구")
+                    .name("서울특별시 서초구")
                     .build();
             Region region16 = Region.builder()
-                    .name("성동구")
+                    .name("서울특별시 성동구")
                     .build();
             Region region17 = Region.builder()
-                    .name("성북구")
+                    .name("서울특별시 성북구")
                     .build();
             Region region18 = Region.builder()
-                    .name("송파구")
+                    .name("서울특별시 송파구")
                     .build();
             Region region19 = Region.builder()
-                    .name("양천구")
+                    .name("서울특별시 양천구")
                     .build();
             Region region20 = Region.builder()
-                    .name("영등포구")
+                    .name("서울특별시 영등포구")
                     .build();
             Region region21 = Region.builder()
-                    .name("용산구")
+                    .name("서울특별시 용산구")
                     .build();
             Region region22 = Region.builder()
-                    .name("은평구")
+                    .name("서울특별시 은평구")
                     .build();
             Region region23 = Region.builder()
-                    .name("종로구")
+                    .name("서울특별시 종로구")
                     .build();
             Region region24 = Region.builder()
-                    .name("중구")
+                    .name("서울특별시 중구")
                     .build();
             Region region25 = Region.builder()
-                    .name("중랑구")
+                    .name("서울특별시 중랑구")
                     .build();
             if (regionRepository.findByName(region1.getName()) == null) {
                 regionRepository.save(region1);

@@ -118,6 +118,13 @@ public class UserController {
         return ApiResponse.onSuccess(responseDto);
     }
 
+    @Operation(summary = "내 지역 조회", description = "내 지역을 조회합니다.")
+    @GetMapping("/api/users/my-area")
+    public ApiResponse<UserResponseDto.MyAreaResponseDto> getUserArea(HttpServletRequest httpServletRequest) {
+        UserResponseDto.MyAreaResponseDto responseDto = userCommandService.getMyArea(httpServletRequest);
+        return ApiResponse.onSuccess(responseDto);
+    }
+
     @Operation(summary = "내 지역에 속한 장소 조회", description = "내 지역에 속한 장소를 조회합니다.")
     @GetMapping("/api/users/my-area/places")
     public ApiResponse<List<PlaceResponseDTO.PlaceDetailDTO>> getPlaces(HttpServletRequest httpServletRequest) {
