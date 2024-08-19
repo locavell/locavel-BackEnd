@@ -81,7 +81,6 @@ public class SecurityConfig {
                         //TODO : 등급 관련 api 일단 모두 허용, 추후 삭제
                         .requestMatchers("/api/users/{user_id}/grade").permitAll()
                         .requestMatchers("/api/users/{user_id}/grade").permitAll()
-                        .requestMatchers("/api/users/**").permitAll()
                         //TODO : 헬스체크용 api 허용
                         .requestMatchers("/health").permitAll()
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
