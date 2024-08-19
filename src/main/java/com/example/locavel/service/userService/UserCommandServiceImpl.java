@@ -222,8 +222,7 @@ public class UserCommandServiceImpl implements UserCommandService{
     @Override
     @Transactional
     public User setMyArea(HttpServletRequest httpServletRequest, String distinct) {
-        String email = httpServletRequest.getUserPrincipal().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+        User user = getUser(httpServletRequest);
         Region region = regionRepository.findByName(distinct);
         user.setMy_area(region);
         userRepository.save(user);
