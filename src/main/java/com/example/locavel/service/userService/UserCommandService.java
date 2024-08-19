@@ -1,5 +1,6 @@
 package com.example.locavel.service.userService;
 
+import com.example.locavel.converter.UserConverter;
 import com.example.locavel.domain.User;
 import com.example.locavel.domain.enums.Grade;
 import com.example.locavel.web.dto.ReviewDTO.ReviewRequestDTO;
@@ -31,4 +32,6 @@ public interface UserCommandService {
 
     //User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress);
     User setMyArea(HttpServletRequest httpServletRequest, String roadNameAddress);
+
+    UserResponseDto.MyAreaResponseDto getMyArea(HttpServletRequest httpServletRequest);
 }

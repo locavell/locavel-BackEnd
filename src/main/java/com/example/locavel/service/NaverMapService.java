@@ -52,8 +52,9 @@ public class NaverMapService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode root = objectMapper.readTree(responseBody);
-            JsonNode addressNode = root.path("results").path(0).path("region").path("area2").path("name");
-            return addressNode.asText();
+            JsonNode addressNode1 = root.path("results").path(0).path("region").path("area1").path("name");
+            JsonNode addressNode2 = root.path("results").path(0).path("region").path("area2").path("name");
+            return addressNode1.asText() + " " + addressNode2.asText();
         } catch (Exception e) {
             e.printStackTrace();
             return "Address parsing failed";
