@@ -59,7 +59,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Grade travelerGrade = Grade.IRON;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
     private Region my_area;
 
