@@ -11,6 +11,4 @@ public class UserSignUpDto {
     private String password;
     private String username;
     private String nickname;
-    private String introduce;
-    private String phone_num;
 }
