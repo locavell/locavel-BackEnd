@@ -38,7 +38,7 @@ public class ReviewRestController {
             HttpServletRequest httpServletRequest,
             @Valid @RequestPart(value = "request") ReviewRequestDTO.ReviewDTO request,
             @PathVariable(name="placeId") Long placeId,
-            @RequestPart(value = "reviewImgUrls", required = false) List<MultipartFile> reviewImgUrls) {
+            @ModelAttribute(value = "reviewImgUrls") List<MultipartFile> reviewImgUrls) {
         if(request.getRating() == null) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_EXIST);
         }
