@@ -66,5 +66,6 @@ jobs:
           script: |
             docker stop locavel-server || true
             docker rm locavel-server || true
+            docker image rm ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
             docker run -d --name locavel-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/locavel-server:latest
