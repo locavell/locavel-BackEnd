@@ -36,9 +36,9 @@ public class ReviewRestController {
     @PostMapping(value = "/{placeId}", consumes = "multipart/form-data")
     public ApiResponse<ReviewResponseDTO.ReviewResultDTO> createReview(
             HttpServletRequest httpServletRequest,
-            @Valid @RequestPart ReviewRequestDTO.ReviewDTO request,
+            @Valid @RequestPart(value = "request") ReviewRequestDTO.ReviewDTO request,
             @PathVariable(name="placeId") Long placeId,
-            @RequestPart(required = false) List<MultipartFile> reviewImgUrls) {
+            @RequestPart(value = "reviewImgUrls", required = false) List<MultipartFile> reviewImgUrls) {
         if(request.getRating() == null) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_EXIST);
         }
