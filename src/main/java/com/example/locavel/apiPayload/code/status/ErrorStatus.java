@@ -41,6 +41,7 @@ public enum ErrorStatus implements BaseErrorCode {
     //유저
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001","해당 유저가 존재하지 않습니다."),
     USER_SAME(HttpStatus.BAD_REQUEST,"USER4002","본인입니다."),
+    USER_REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4003", "내 지역 설정은 필수 입니다. 설정 후 다시 시도해주세요."),
 
     //팔로우
     FOLLOWING_NOT_FOUND(HttpStatus.NOT_FOUND, "FOLLOW4001","팔로우 중이 아닙니다."),
