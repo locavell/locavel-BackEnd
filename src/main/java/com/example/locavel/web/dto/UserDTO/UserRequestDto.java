@@ -16,8 +16,6 @@ public class UserRequestDto {
     public static class UpdateUserDTO{
         private String name;
         private String nickname;
-        private String introduce;
-        private String phone_num;
     }
 
 
