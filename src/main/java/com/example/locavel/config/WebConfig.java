@@ -11,13 +11,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("https://api.locavel.site","http://localhost:8080","http://43.203.42.179:8080")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.HEAD.name(),
                         HttpMethod.POST.name(),
                         HttpMethod.PUT.name(),
                         HttpMethod.PATCH.name(),
-                        HttpMethod.DELETE.name());
+                        HttpMethod.DELETE.name())
+                .allowCredentials(true);
     }
 }
