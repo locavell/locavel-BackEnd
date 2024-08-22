@@ -36,9 +36,8 @@ public class ReviewRestController {
     @PostMapping(value = "/{placeId}", consumes = "multipart/form-data")
     public ApiResponse<ReviewResponseDTO.ReviewResultDTO> createReview(
             HttpServletRequest httpServletRequest,
-            @Valid @RequestPart ReviewRequestDTO.ReviewDTO request,
-            @PathVariable(name="placeId") Long placeId,
-            @RequestPart(required = false) List<MultipartFile> reviewImgUrls) {
+            @ModelAttribute ReviewRequestDTO.ReviewDTO request,
+            @PathVariable(name="placeId") Long placeId) {
         if(request.getRating() == null) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_EXIST);
         }
@@ -49,7 +48,7 @@ public class ReviewRestController {
         User user = userCommandService.getUser(httpServletRequest);
         Long userId = user.getId();
         userCommandService.calculateTravelerGradeScore(userId ,request); //여행객 점수를 증가시키는 로직
-        ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(user, placeId, request, reviewImgUrls);
+        ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(user, placeId, request, request.getImg());
         return ApiResponse.of(SuccessStatus.REVIEW_CREATE_OK,response);
     }
 
