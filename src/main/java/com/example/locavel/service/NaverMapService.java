@@ -26,7 +26,7 @@ public class NaverMapService {
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .queryParam("coords", longitude + "," + latitude)  // 좌표 순서 확인
-                .queryParam("orders", "roadaddr")  // 도로명 주소를 요청
+                .queryParam("orders", "addr")  // 지번 주소를 요청
                 .queryParam("output", "json");
 
         HttpHeaders headers = new HttpHeaders();
