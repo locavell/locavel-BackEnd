@@ -59,8 +59,6 @@ public class UserCommandServiceImpl implements UserCommandService{
                 .password(userSignUpDto.getPassword())
                 .nickname(userSignUpDto.getNickname())
                 .username(userSignUpDto.getUsername())
-                .introduce(userSignUpDto.getIntroduce())
-                .phone_num(userSignUpDto.getPhone_num())
                 .access(Access.USER)
                 .created_at(LocalDateTime.now())
                 .build();
@@ -108,8 +106,6 @@ public class UserCommandServiceImpl implements UserCommandService{
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
         if(updateUserDTO.getName() != null) user.setUserName(updateUserDTO.getName());
         if(updateUserDTO.getNickname() != null) user.setNickname(updateUserDTO.getNickname());
-        if(updateUserDTO.getIntroduce() != null) user.setIntroduce(updateUserDTO.getIntroduce());
-        if(updateUserDTO.getPhone_num() != null) user.setPhone_num(updateUserDTO.getPhone_num());
         return user;
     }
 
