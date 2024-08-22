@@ -29,7 +29,7 @@ public interface PlaceRepository extends JpaRepository<Places, Long> {
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(latitude)) * " +
             "cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) * " +
             "sin(radians(latitude)))) AS distance " +
-            "FROM Places " +
+            "FROM places " +
             "HAVING distance < :radius " +
             "ORDER BY distance", nativeQuery = true)
     List<Places> findNearbyPlaces(@Param("latitude")double latitude,
