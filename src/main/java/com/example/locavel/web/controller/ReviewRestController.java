@@ -38,7 +38,7 @@ public class ReviewRestController {
             HttpServletRequest httpServletRequest,
             @Valid @RequestPart(value = "request") ReviewRequestDTO.ReviewDTO request,
             @PathVariable(name="placeId") Long placeId,
-            @ModelAttribute(value = "reviewImgUrls") List<MultipartFile> reviewImgUrls) {
+            @RequestPart(value = "img", required = false) List<MultipartFile> img) {
         if(request.getRating() == null) {
             throw new ReviewsHandler(ErrorStatus.RATING_NOT_EXIST);
         }
@@ -49,7 +49,7 @@ public class ReviewRestController {
         User user = userCommandService.getUser(httpServletRequest);
         Long userId = user.getId();
         userCommandService.calculateTravelerGradeScore(userId ,request); //여행객 점수를 증가시키는 로직
-        ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(user, placeId, request, reviewImgUrls);
+        ReviewResponseDTO.ReviewResultDTO response = reviewService.createReview(user, placeId, request, img);
         return ApiResponse.of(SuccessStatus.REVIEW_CREATE_OK,response);
     }
 
