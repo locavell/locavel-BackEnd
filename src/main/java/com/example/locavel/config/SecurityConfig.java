@@ -83,7 +83,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/{user_id}/grade").permitAll()
                         //TODO : 헬스체크용 api 허용
                         .requestMatchers("/health").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
