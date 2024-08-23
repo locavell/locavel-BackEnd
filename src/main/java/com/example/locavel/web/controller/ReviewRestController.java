@@ -54,7 +54,7 @@ public class ReviewRestController {
     }
 
     @Operation(summary = "리뷰 수정", description = "리뷰를 수정합니다.")
-    @PatchMapping(value = "/{reviewId}", consumes = "multipart/form-data")
+    @PutMapping(value = "/{reviewId}", consumes = "multipart/form-data")
     public ApiResponse<ReviewResponseDTO.ReviewUpdateResultDTO> updateReview(
             @Valid @RequestPart ReviewRequestDTO.ReviewDTO request,
             @PathVariable(name="reviewId") Long reviewId,

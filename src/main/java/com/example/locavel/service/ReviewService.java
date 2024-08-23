@@ -58,8 +58,8 @@ public class ReviewService {
         Reviews review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new ReviewsHandler(ErrorStatus.REVIEW_NOT_FOUND));
         Places place = review.getPlace();
-        if(request.getRating() != null) {review.setRating(request.getRating());}
-        if(request.getComment() != null) {review.setComment(request.getComment());}
+        review.setRating(request.getRating());
+        review.setComment(request.getComment());
         if(reviewImgUrls != null) {uploadReviewImg(reviewImgUrls, review, true);}
         Reviews updatedReview = reviewRepository.save(review);
         placeService.setReview(place);
