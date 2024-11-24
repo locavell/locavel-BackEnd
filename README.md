@@ -20,6 +20,15 @@
 <br>
 <br>
 
+## 아키텍처 구조
+<div align="center">
+  <img width = 900, src="https://github.com/user-attachments/assets/a3285b4e-9c44-4126-9384-2bada11f4f9b">
+</div>
+
+<br>
+<br>
+<br>
+
 ## Service
 <div align="center">
   <img width = 400, src="https://github.com/user-attachments/assets/8580ed3e-8fc2-4675-9ae9-ee9f8cc7d9fb">
